@@ -1,0 +1,28 @@
+.Button-area-number{
+    height: 50px;
+    width: 50px;
+    background-color: #f0a456;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+    border-radius: 5px;
+}
+
+.Button-area-operation{
+    height: 50px;
+    width: 50px;
+    background-color: black;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+    border-radius: 5px;
+    
+}
+
+.Button-area-operation h4 {
+    color: white;
+}
