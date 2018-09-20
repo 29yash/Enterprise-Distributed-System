@@ -16,7 +16,7 @@
     margin-bottom: 10px;
 }
 
-.btn-success:hover{
+.btn-success:active:focus, .btn-success:active:hover, .btn-success:hover, .btn-success:active, .btn-success:visited, .btn-success:focus{
     background-color: #ff8a00;
     border:1px solid #ff8a00
 }
