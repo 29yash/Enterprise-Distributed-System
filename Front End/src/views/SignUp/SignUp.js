@@ -76,7 +76,7 @@ class SignUp extends Component{
         axios.post('http://localhost:8080/signUp', { firstName, lastName, email, password }).then((response) => {
             console.log(response);
             if(response.data.success){
-                this.props.history.push('/login');
+                this.props.history.push('/');
             }
             else{
                 this.setState({

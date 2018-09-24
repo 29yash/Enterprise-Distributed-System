@@ -51,7 +51,7 @@ class Login extends Component{
                                     <input type="email" class="form-control form-control-lg" onChange={this.onChange} name="username" placeholder="Email Address" required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" onChange={this.onChange} name="password" placeholder="Password"  minlength="5" required/>
+                                    <input type="password" class="form-control form-control-lg" onChange={this.onChange} name="password" placeholder="Password"  minLength="5" required/>
                                 </div>
                                 <div class="form-group"><a href="#">Forget Password ?</a></div>
                                 <div class="form-check form-check-inli1ne">
@@ -70,8 +70,11 @@ class Login extends Component{
     handleSubmit(event) {
         event.preventDefault();
         const { username, password } = this.state;
-        axios.post('http://localhost:8080/login', {username, password}).then((result) => {
-            console.log(result);
+        axios.post('http://localhost:8080/login', {username, password},{withCredentials: true}).then((response) => {
+            console.log(response);
+            if(response.data.success){
+                this.props.history.push('/');
+            }
         })
         .catch((error) =>{
             this.setState({loginFailed:true});

@@ -1,0 +1,47 @@
+.edit-profile{
+    width: inherit;
+    margin-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;
+}
+
+.profile-container{
+    border-top: 1px solid #cccccc;
+    padding-top: 15px;
+}
+
+.profile-information{
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.profile-container .alert-danger, .profile-container .alert-success {
+    height: 50px;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.profile-pic{
+    text-align: center;
+}
+
+.profile-information .col-9-lg {
+    border: 1px solid #cccccc;
+    margin-top: 20px;
+    padding: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-information .save-button{
+    text-align: center;
+}
+
+textarea[name=user_aboutme] {
+    resize: none;
+}

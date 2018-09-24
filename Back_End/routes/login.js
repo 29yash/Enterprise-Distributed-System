@@ -29,7 +29,12 @@ router.post("/login",function(req,res){
             console.log(rows);
             if(rows.length > 0){
                 if(rows[0].user_password === req.body.password){
-                    res.cookie('cookie',rows[0],{maxAge: 900000, httpOnly: false, path : '/'});
+                    let cookie = {
+                      user_email: req.body.username,
+                      user_first_name: rows[0].user_first_name,
+                      user_last_name: rows[0].user_last_name
+                    };
+                    res.cookie('HomeawayAuth', cookie, {maxAge: 900000, httpOnly: false, path : '/'});
                     req.session.user = rows[0];
                     response['success'] = true;
                     response['message'] = "User Logged in successfully";

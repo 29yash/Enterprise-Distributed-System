@@ -42,6 +42,10 @@ router.post("/signup",function(req,res){
                     if(result.affectedRows > 0){
                         response['success'] = true;
                         response['message'] = "User Registered successfully";
+                        res.cookie('HomewayAuth', 
+                        {user_email: req.body.email, user_first_name: req.body.firstName, 
+                            user_last_name: req.body.lastName},
+                        {maxAge: 900000, httpOnly: false, path : '/'});
                         res.status(200).send(response);
                     }
                     else{

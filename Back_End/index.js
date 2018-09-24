@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var LoginRouter = require('./routes/login');
 var SignupRouter = require('./routes/signup');
+var LogoutRouter = require('./routes/logout');
+var UserProfileRouter = require('./routes/userProfile');
 
 //use cors to allow cross origin resource sharing
 App.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -34,7 +36,8 @@ App.use(function(req, res, next) {
 
 App.use("/", LoginRouter);
 App.use("/", SignupRouter);
-
+App.use("/", LogoutRouter);
+App.use("/", UserProfileRouter);
 var server = App.listen(8080, function () {
   console.log("Server started on port 8080");
 });

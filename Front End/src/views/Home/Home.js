@@ -1,10 +1,11 @@
+
 import React, {Component} from 'react';
 import './Home.css';
-import logo from '../../images/logo-header-white.svg';
-import birdHouse from '../../images/birdhouse-bceheader-white.svg';
 import {Redirect} from 'react-router';
-import {Link} from 'react-router-dom';
 import cookie from 'react-cookies';
+import {Link} from 'react-router-dom';
+import axios from 'axios';
+import Navbar from '../Navbar/Navbar';
 
 class Home extends Component{
 
@@ -14,43 +15,34 @@ class Home extends Component{
 
     render(){
         let redirectVar = null;
-        if(!cookie.load('cookie')){
+        if(!cookie.load('HomewayAuth')){
             redirectVar = <Redirect to= "/login"/>
         }
         return(
             <div class="container root">
                 <div class="home-background">
-                    <nav class="navbar navbar-light bg-light">
-                        <a class="navbar-brand" href="#">
-                            <img src={logo} width="200" height="50" class="d-inline-block align-top"/>
-                        </a>
-                        <div class="navbar-fixed-right">
-                          <div class="nav-item">
-                            <a>Trip Boards</a>
-                          </div>
-                          <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Login
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item"><Link to="/login">Traveler Login</Link></a><br/><br/>
-                                <a class="dropdown-item" href="#">Owner Login</a>
-                            </div>
-                          </div>
-                          <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Help
-                            </a>
-                          </div>
-                          <div class="list-your-property">
-                            <a>List Your Property</a>
-                          </div>
-                            <a class="bird-house"><img src={birdHouse} height="50" width="50"/></a>
-                        </div>
-                    </nav>
+                    <Navbar></Navbar>
                     <div class="hero-text">
                         <h1 class="headline">Book beach houses, cabins,</h1>
                         <h1 class="headline">candos and more, worldwide</h1>
+                    </div>
+                    <div class="inputs row">
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" placeholder="Where do you want to go?"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <input type="text" class="form-control" placeholder="Arrive"/>
+                        </div>
+                        <div class="col-lg-2">
+
+                            <input type="text" class="form-control" placeholder="Depart"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <input type="text" class="form-control" placeholder="Guests"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="button" class="btn btn-primary btn-lg btn-block">Search</button>
+                        </div>
                     </div>
                 </div>  
             </div>
