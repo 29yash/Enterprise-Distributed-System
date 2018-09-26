@@ -24,7 +24,7 @@ router.post("/signup",function(req,res){
                 throw err;
             }
             connection.query('INSERT INTO users(user_email,user_first_name, user_last_name, user_password, user_role) VALUES (?,?,?,?,?)',
-                [req.body.email, req.body.firstName, req.body.lastName, req.body.password, 'Traveller' ],  function(err, result){
+                [req.body.email, req.body.firstName, req.body.lastName, req.body.password, req.body.role ],  function(err, result){
                 if(err){
                     if(err.code === 'ER_DUP_ENTRY'){
                         response['success'] = false ;
@@ -54,7 +54,8 @@ router.post("/signup",function(req,res){
                         res.status(200).send(response);
                     }
                 }
-            });    
+            }); 
+            connection.release();   
         });
     }
 });

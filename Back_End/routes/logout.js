@@ -4,7 +4,7 @@ var router = express.Router();
 router.post("/logout",function(req,res){
     let response= {};
     response['success'] = true;
-    response['message'] = "User Logged in successfully";
+    response['message'] = "User Logged out successfully";
     res.clearCookie("HomeawayAuth");
     res.status(200).send(response);
 });

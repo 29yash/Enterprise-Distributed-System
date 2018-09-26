@@ -17,7 +17,7 @@ router.post("/login",function(req,res){
             res.status(500).send(response); 
             throw err; 
         }
-        connection.query('select * from users where user_email=?',[req.body.username],  function(err, rows){
+        connection.query('select * from users where user_email=? AND user_role=?', [req.body.username, req.body.role],  function(err, rows){
             console.log('Rows :'+ rows);            
           if(err){
             response['success'] = false ;

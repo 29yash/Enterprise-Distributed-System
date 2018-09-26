@@ -8,6 +8,9 @@ var LoginRouter = require('./routes/login');
 var SignupRouter = require('./routes/signup');
 var LogoutRouter = require('./routes/logout');
 var UserProfileRouter = require('./routes/userProfile');
+var UploadPhotoRouter = require('./routes/uploadImage');
+var BookingRouter = require('./routes/booking');
+var SearchPropertyRouter = require('./routes/searchProperty');
 
 //use cors to allow cross origin resource sharing
 App.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -34,10 +37,29 @@ App.use(function(req, res, next) {
   next();
 });
 
+App.use("/photos", express.static(__dirname + '\\photos'));
+
 App.use("/", LoginRouter);
 App.use("/", SignupRouter);
+
+App.use(function (req, res, next) {
+  let response = {};
+  if(!req.cookies['HomeawayAuth']){
+    response['success'] = false ;
+    response['message'] = 'Unauthorised Access!';
+    res.status(401).end(response);
+  }
+  else{
+    next();
+  }
+});
+
 App.use("/", LogoutRouter);
 App.use("/", UserProfileRouter);
+App.use("/", UploadPhotoRouter);
+App.use("/", BookingRouter);
+App.use("/", BookingRouter);
+
 var server = App.listen(8080, function () {
   console.log("Server started on port 8080");
 });

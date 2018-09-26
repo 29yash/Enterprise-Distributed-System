@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import './SignUp.css';
+import './OwnerSignUp.css';
 import logo from '../../images/loginHeader.svg';
 import home from '../../images/home_icon.svg';
 import {Link} from 'react-router-dom';
+import ownerLogin from '../../images/owner-login.png';
 import axios from 'axios';
 
-class SignUp extends Component{
+class OwnerSignUp extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -41,10 +42,13 @@ class SignUp extends Component{
                   <span className="home"><img src={home} width="50" height="50" /></span>
                 </div>
                 <div className="row main">
-                    {this.renderFailedSignUp()}
-                    <div className="loginContainer">
-                        <h1>Sign up for HomeAway</h1>
-                        <h4>Already have an account? <Link to="/login"><span class="glyphicon"></span>Login</Link></h4>
+                    <div className="col-lg-4">
+                        <img src={ownerLogin} height="300" />
+                    </div>
+                    <div className="col-lg-6 signUpContainer">
+                        {this.renderFailedSignUp()}
+                        <h1>Sign up to Post Property</h1>
+                        <h4>Already have an account? <Link to="/ownerLogin"><span class="glyphicon"></span>Owner Login</Link></h4>
                         <div className="formContainer">
                             <form onSubmit={this.handleSubmit}>
                                 <div class="form-group form-inline row">
@@ -73,8 +77,8 @@ class SignUp extends Component{
     handleSubmit(event) {
         event.preventDefault();
         const { firstName, lastName, email, password } = this.state;
-        let role = 'Traveller';
-        axios.post('http://localhost:8080/signUp', { firstName, lastName, email, password, role },{withCredentials: true}).then((response) => {
+        let role =  'Owner';
+        axios.post('http://localhost:8080/signUp', { firstName, lastName, email, password, role},{withCredentials: true}).then((response) => {
             console.log(response);
             if(response.data.success){
                 this.props.history.push('/');
@@ -91,4 +95,4 @@ class SignUp extends Component{
         });
     }
 }
-export default SignUp;
+export default OwnerSignUp;

@@ -5,6 +5,8 @@ import SignUp from '../views/SignUp/SignUp';
 import Home from '../views/Home/Home';
 import ViewProfile from '../views/ViewProfile/ViewProfile';
 import EditProfile from '../views/EditProfile/EditProfile';
+import OwnerLogin from '../views/OwnerLogin/OwnerLogin';
+import OwnerSignUp from '../views/OwnerSignUp/OwnerSignUp';
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -13,7 +15,9 @@ class Main extends Component {
                 {/*Render Different Component based on Route*/}
                 <Route exact path="/" component={Home}/>
                 <Route path="/login" component={Login}/>
+                <Route path="/ownerLogin" component={OwnerLogin}/>
                 <Route path="/signUp" component={SignUp}/>
+                <Route path="/ownerSignUp" component={OwnerSignUp}/>
                 <Route path="/viewProfile" component={ViewProfile}/>
                 <Route path="/editProfile" component={EditProfile}/>
             </div>

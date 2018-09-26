@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import './Login.css';
+import './OwnerLogin.css';
 import logo from '../../images/loginHeader.svg';
 import home from '../../images/home_icon.svg';
+import ownerLogin from '../../images/owner-login.png';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 
-class Login extends Component{
+class OwnerLogin extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -38,13 +39,14 @@ class Login extends Component{
                   <span className="home"><img src={home} width="50" height="50" /></span>
                 </div>
                 <div className="row main">
-                    {this.renderFailedLogin()}
-                    <div className="loginContainer">
-                        <h1>Log in to HomeAway</h1>
-                        <h4>Need a account? <Link to="/signUp"><span class="glyphicon"></span>SignUp</Link></h4>
+                    <div className="col-lg-6">
+                        <img src={ownerLogin} height="300" />
+                    </div>
+                    <div className="col-lg-4 loginContainer">
+                        {this.renderFailedLogin()}
                         <div className="formContainer">
                             <div class="formHeader">
-                                <span className="formHeading">Account Login</span>
+                                <span className="formHeading">Owner Login</span>
                             </div>
                             <form onSubmit={this.handleSubmit}>
                                 <div class="form-group">
@@ -60,6 +62,8 @@ class Login extends Component{
                                 <br/>
                                 <button type="submit" class="btn btn-success btn-lg btn-block">Login</button>
                             </form>
+                            <hr/>
+                            <h6 style={{'text-align' : 'center'}}>Want to list your property? <Link to="/ownerSignUp"><span class="glyphicon"></span>Learn More</Link></h6>
                         </div>
                     </div>
                 </div>
@@ -70,7 +74,7 @@ class Login extends Component{
     handleSubmit(event) {
         event.preventDefault();
         const { username, password } = this.state;
-        let role = 'Traveller';
+        let role = "Owner";
         axios.post('http://localhost:8080/login', {username, password, role},{withCredentials: true}).then((response) => {
             console.log(response);
             if(response.data.success){
@@ -83,4 +87,4 @@ class Login extends Component{
         });
     }
 }
-export default Login;
+export default OwnerLogin;

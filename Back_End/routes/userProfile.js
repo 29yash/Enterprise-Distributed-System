@@ -4,12 +4,6 @@ var getConnectionFromPool = require('../database');
 
 router.get("/userProfile/getProfile",function(req,res){
     let response = {};
-    console.log(req.cookies);
-    if(!req.cookies['HomeawayAuth']){
-        response['success'] = false ;
-        response['message'] = 'Unauthorised Access!';
-        res.status(401).end(response);
-    }
     getConnectionFromPool((err, connection)=>{
         if(err){
             response['success'] = false ;
@@ -43,19 +37,14 @@ router.get("/userProfile/getProfile",function(req,res){
                 }
             });
         }
+        connection.release();
     });
 });
 
 
 router.post("/userProfile/editProfile",function(req,res){
     let response = {};
-    console.log(req.body);
-    if(!req.cookies['HomeawayAuth']){
-        response['message'] = 'Unauthorised Access!';
-        response['success'] = false ;
-        res.status(401).send(response);
-    }
-    else if(!(req.body.user_first_name.trim().length > 0 && req.body.user_last_name.trim().length > 0)){
+    if(!(req.body.user_first_name.trim().length > 0 && req.body.user_last_name.trim().length > 0)){
         response['success'] = false ;
         response['message'] = "First and Last Name are Mandatory";
         res.status(400).send(response);
@@ -92,8 +81,8 @@ router.post("/userProfile/editProfile",function(req,res){
                 }
             });
         }
+        connection.release();
     });
-
 });
 
 

@@ -31,6 +31,7 @@ class Navbar extends Component{
 
     renderUser(){
         if(cookie.load('HomeawayAuth')){
+            console.log(cookie.load('HomeawayAuth'));
             return(
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" className={this.props.theme === 'light' ? 'blue-link-text' : 'white-link-text'} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -50,8 +51,8 @@ class Navbar extends Component{
                         Login
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <Link to="/login"><span class="dropdown-item">Traveler Login</span></Link><br/><br/>
-                        <span class="dropdown-item" href="#">Owner Login</span>
+                        <Link to="/login"><span class="dropdown-item">Traveller Login</span></Link><br/><br/>
+                        <Link to="/ownerLogin"><span class="dropdown-item" href="#">Owner Login</span></Link>
                     </div>
                 </div>
             );            
