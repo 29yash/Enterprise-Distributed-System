@@ -81,7 +81,7 @@ class OwnerSignUp extends Component{
         axios.post('http://localhost:8080/signUp', { firstName, lastName, email, password, role},{withCredentials: true}).then((response) => {
             console.log(response);
             if(response.data.success){
-                this.props.history.push('/');
+                this.props.history.push('/ownerDashboard');
             }
             else{
                 this.setState({

@@ -23,6 +23,8 @@ class ViewProfile extends Component{
         user_school: '',
         user_gender: "Male",
         user_phone_number: "",
+        profilePictureUrl:null,
+        profilePicture:null,
         isFormDirty:false
     };
 
@@ -42,12 +44,44 @@ class ViewProfile extends Component{
             user_last_name: this.userDetails.user_last_name,
             user_school: this.userDetails.user_school,
             user_gender: this.userDetails.user_gender,
-            user_phone_number: this.userDetails.user_phone_number
+            user_phone_number: this.userDetails.user_phone_number,
+            profilePictureUrl: this.userDetails.pic_url
         });
     }
 
     onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value, isFormDirty: true });
+        if(event.target.name == 'profilePicture'){
+            // this.setState({profilePicture: event.target.files[0]});
+            this.uploadProfilePicture(event.target.files[0]);
+            // console.log(event.target.files[0]);
+            // let reader = new FileReader();
+            // reader.onload = (e) => {
+            //     this.setState({profilePicture: e.target.result});
+            // };
+            // reader.readAsDataURL(event.target.files[0]); 
+        }
+        else{
+            this.setState({ [event.target.name]: event.target.value, isFormDirty: true });
+        }
+    }
+
+    uploadProfilePicture(profilePicture){
+        let formData = new FormData();
+        formData.append('profilePicture', profilePicture);
+        axios.post('http://localhost:8080/userProfile/uploadPhoto', formData, {withCredentials: true})
+        .then((response) => {
+            if(response.data.success){
+                this.setState({profilePictureUrl: response.data.url});
+            }
+            else{
+                console.log(response.data.message);
+                this.setState({isAckPositive:false, ackMessage : response.data.message})
+            }
+        })
+        .catch((error) =>{
+            console.log(error);
+            // this.setState({isAckPositive:false, ackMessage : error})
+        });
     }
 
     handleSubmit(event){
@@ -81,6 +115,25 @@ class ViewProfile extends Component{
         }
     }
 
+
+    renderProfilePicture(){
+        let profilePicture = this.state.profilePictureUrl ? this.state.profilePictureUrl : profile; 
+        return(
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    <input type='file' id="profilePicture" name="profilePicture" onChange={this.onChange} accept=".png, .jpg, .jpeg" />
+                    <label for="profilePicture"><span class="glyphicon glyphicon-pencil" style={{"color":"#116db3"}}></span></label>
+                </div>
+                <div class="avatar-preview">
+                    <div id="imagePreview">
+                        <img src={profilePicture} style={{'height':"inherit", 'width':"inherit", 'border-radius':'100%'}}/>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+
     render(){        
         let redirectVar = null;
         if(!cookie.load('HomeawayAuth')){
@@ -93,7 +146,8 @@ class ViewProfile extends Component{
                 <div class="profile-container">
                     {this.renderAcknowledgement()}
                     <div class="row profile-pic">
-                        <img class="rounded-circle" height="100" width="100" src={profile}/>
+                        {this.renderProfilePicture()}
+                        {/* <img class="rounded-circle" height="100" width="100" src={profile}/> */}
                         <h1>{this.state.user_first_name +" "+ this.state.user_last_name}</h1>
                     </div>
                     <div class="row profile-information">

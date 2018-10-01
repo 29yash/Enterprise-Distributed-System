@@ -8,7 +8,6 @@ var LoginRouter = require('./routes/login');
 var SignupRouter = require('./routes/signup');
 var LogoutRouter = require('./routes/logout');
 var UserProfileRouter = require('./routes/userProfile');
-var UploadPhotoRouter = require('./routes/uploadImage');
 var BookingRouter = require('./routes/booking');
 var SearchPropertyRouter = require('./routes/searchProperty');
 
@@ -47,7 +46,7 @@ App.use(function (req, res, next) {
   if(!req.cookies['HomeawayAuth']){
     response['success'] = false ;
     response['message'] = 'Unauthorised Access!';
-    res.status(401).end(response);
+    res.status(401).send(response);
   }
   else{
     next();
@@ -56,7 +55,6 @@ App.use(function (req, res, next) {
 
 App.use("/", LogoutRouter);
 App.use("/", UserProfileRouter);
-App.use("/", UploadPhotoRouter);
 App.use("/", BookingRouter);
 App.use("/", BookingRouter);
 

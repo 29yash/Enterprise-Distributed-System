@@ -24,6 +24,7 @@ class Navbar extends Component{
             }
         })
         .catch((error) =>{
+            this.props.history.push('/');
             this.setState({loginFailed:true});
             console.log(error); 
         });
@@ -31,15 +32,19 @@ class Navbar extends Component{
 
     renderUser(){
         if(cookie.load('HomeawayAuth')){
-            console.log(cookie.load('HomeawayAuth'));
+            let userData = JSON.parse(cookie.load('HomeawayAuth').substring(2));
+            let profilePicture = userData.user_profile_picture ? userData.user_profile_picture : profile;
+            console.log(JSON.parse(cookie.load('HomeawayAuth').substring(2)));
             return(
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" className={this.props.theme === 'light' ? 'blue-link-text' : 'white-link-text'} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <img class="rounded-circle" height="30" width="30" src={profile}/>  Yash M.
+                        <img class="rounded-circle" height="30" width="30" src={profilePicture}/>
+                        {"    "+userData.user_first_name}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <Link to="/viewProfile"><span class="dropdown-item">My Profile</span></Link><br/><br/>
                         <span class="dropdown-item" onClick={this.logout.bind(this)}>Logout</span>
+                        {}
                     </div>
                 </div>
             );

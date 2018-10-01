@@ -17,7 +17,8 @@ router.post("/login",function(req,res){
             res.status(500).send(response); 
             throw err; 
         }
-        connection.query('select * from users where user_email=? AND user_role=?', [req.body.username, req.body.role],  function(err, rows){
+        let leftJoin = 'SELECT * FROM users LEFT JOIN user_profile_picture ON users.user_email = user_profile_picture.username AND users.user_email = ? AND user_role=?';  
+        connection.query(leftJoin, [req.body.username, req.body.role],  function(err, rows){
             console.log('Rows :'+ rows);            
           if(err){
             response['success'] = false ;
@@ -32,7 +33,9 @@ router.post("/login",function(req,res){
                     let cookie = {
                       user_email: req.body.username,
                       user_first_name: rows[0].user_first_name,
-                      user_last_name: rows[0].user_last_name
+                      user_last_name: rows[0].user_last_name,
+                      user_role: req.body.role,
+                      user_profile_picture : rows[0].pic_url
                     };
                     res.cookie('HomeawayAuth', cookie, {maxAge: 900000, httpOnly: false, path : '/'});
                     req.session.user = rows[0];

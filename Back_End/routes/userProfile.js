@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var getConnectionFromPool = require('../database');
+var uploadPhoto = require('./uploadImage');
 
 router.get("/userProfile/getProfile",function(req,res){
     let response = {};
@@ -13,8 +14,9 @@ router.get("/userProfile/getProfile",function(req,res){
         }
         else{
             let user_email = req.cookies['HomeawayAuth']['user_email'];
-            console.log(user_email);            
-            connection.query('select * from users where user_email=?',[user_email],  function(err, rows){
+            console.log(user_email);          
+            let leftJoin = 'SELECT * FROM users LEFT JOIN user_profile_picture ON users.user_email = user_profile_picture.username AND users.user_email = ?';  
+            connection.query(leftJoin, [user_email],  function(err, rows){
                 console.log('Rows :'+ rows);            
                 if(err){
                     response['success'] = false ;
@@ -86,5 +88,50 @@ router.post("/userProfile/editProfile",function(req,res){
 });
 
 
-
+router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), function(req,res){
+    debugger;
+    let response = {};
+    console.log(req.file);
+    if(req.file){
+        getConnectionFromPool((err, connection)=>{
+            if(err){
+                response['success'] = false ;
+                response['message'] = 'Internal Server Error';
+                res.status(500).send(response); 
+                throw err; 
+            }
+            else{
+                let photoInsertQuery = 'REPLACE INTO user_profile_picture VALUES (?,?)';
+                let photoUrl = "http://localhost:8080/photos/" + req.file.filename;
+                let username = req.cookies['HomeawayAuth']['user_email'];
+                connection.query(photoInsertQuery, [username, photoUrl], function(err, result){
+                    if(err){
+                        response['success'] = false ;
+                        response['message'] = 'Internal Server Error';
+                        res.status(500).send(response); 
+                        console.log(err);
+                    }
+                    else{
+                        if(result.affectedRows > 0){
+                            response['success'] = true;
+                            response['message'] = "Image uploaded successfully";
+                            response['url'] = photoUrl;
+                            res.status(200).send(response);
+                        }
+                        else{
+                            response['success'] = false;
+                            response['message'] = "Unable to update your profile !";
+                            res.status(200).send(response);
+                        }  
+                    }
+                });
+            }
+        });
+    }
+    else{
+        response['success'] = false;
+        response['message'] = "File type not supported";
+        res.status(200).send(response);
+    }
+});
 module.exports = router;

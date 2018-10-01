@@ -30,6 +30,9 @@
     color:#72787c;
 }
 
+.rounded-circle {
+    border-radius: 100%
+}
 .col-lg-5{
     display: flex;
     flex-direction: column;

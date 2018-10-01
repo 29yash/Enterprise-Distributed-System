@@ -18,7 +18,8 @@ class ViewProfile extends Component{
         user_hometown: '',
         user_languages: '',
         user_last_name: "",
-        user_school: ''
+        user_school: '',
+        pic_url: null
     };
     constructor(props){
         super(props);
@@ -39,7 +40,8 @@ class ViewProfile extends Component{
                         user_hometown: response.data.user.user_hometown ? response.data.user.user_hometown : '',
                         user_languages: response.data.user.user_languages ? response.data.user.user_languages : '',
                         user_last_name: response.data.user.user_last_name ? response.data.user.user_last_name : "",
-                        user_school: response.data.user.user_school ? response.data.user.user_school : ''
+                        user_school: response.data.user.user_school ? response.data.user.user_school : '',
+                        pic_url : response.data.user.pic_url ? response.data.user.pic_url : null
                     });
                 }
             });
@@ -47,6 +49,7 @@ class ViewProfile extends Component{
 
     render(){
         let redirectVar = null;
+        let profilePicture = this.state.pic_url ? this.state.pic_url : profile;
         if(!cookie.load('HomeawayAuth')){
             redirectVar = <Redirect to= "/"/>
         }
@@ -56,7 +59,7 @@ class ViewProfile extends Component{
                <Navbar theme="light"></Navbar>
                <div class="profile-info">
                     <div class="col-lg-5 picture-div h-100">
-                    <img class="rounded-circle" height="225" width="225" src={profile}/>
+                    <img class="rounded-circle" height="225" width="225" src={profilePicture}/>
                     </div>
                     <div class="col-lg-5">
                         <div class="heading">
