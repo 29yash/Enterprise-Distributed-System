@@ -5,7 +5,6 @@ import cookie from 'react-cookies';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
-import profile from '../../images/default-profile-pic.png';
 
 class OwnerDashboard extends Component{
 

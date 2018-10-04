@@ -17,9 +17,8 @@ router.post("/login",function(req,res){
             res.status(500).send(response); 
             throw err; 
         }
-        let leftJoin = 'SELECT * FROM users LEFT JOIN user_profile_picture ON users.user_email = user_profile_picture.username AND users.user_email = ? AND user_role=?';  
-        connection.query(leftJoin, [req.body.username, req.body.role],  function(err, rows){
-            console.log('Rows :'+ rows);            
+        let leftJoin = 'SELECT * FROM users LEFT JOIN user_profile_picture ON users.user_email = user_profile_picture.username WHERE users.user_email = ? AND users.user_role=?';  
+        connection.query(leftJoin, [req.body.username, req.body.role],  function(err, rows){            
           if(err){
             response['success'] = false ;
             response['message'] = 'Internal Server Error';

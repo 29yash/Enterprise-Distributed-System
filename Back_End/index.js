@@ -10,6 +10,7 @@ var LogoutRouter = require('./routes/logout');
 var UserProfileRouter = require('./routes/userProfile');
 var BookingRouter = require('./routes/booking');
 var SearchPropertyRouter = require('./routes/searchProperty');
+var PostPropertyRouter = require('./routes/postProperty');
 
 //use cors to allow cross origin resource sharing
 App.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -55,7 +56,7 @@ App.use(function (req, res, next) {
 
 App.use("/", LogoutRouter);
 App.use("/", UserProfileRouter);
-App.use("/", BookingRouter);
+App.use("/", PostPropertyRouter);
 App.use("/", BookingRouter);
 
 var server = App.listen(8080, function () {

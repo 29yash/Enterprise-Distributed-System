@@ -15,9 +15,10 @@ router.get("/userProfile/getProfile",function(req,res){
         else{
             let user_email = req.cookies['HomeawayAuth']['user_email'];
             console.log(user_email);          
-            let leftJoin = 'SELECT * FROM users LEFT JOIN user_profile_picture ON users.user_email = user_profile_picture.username AND users.user_email = ?';  
-            connection.query(leftJoin, [user_email],  function(err, rows){
-                console.log('Rows :'+ rows);            
+            let leftJoin = 'SELECT * FROM users LEFT JOIN user_profile_picture ON users.user_email = user_profile_picture.username WHERE users.user_email = ?';  
+            connection.query(leftJoin, [user_email],  function(err, rows){           
+                console.log(rows);
+                
                 if(err){
                     response['success'] = false ;
                     response['message'] = 'Internal Server Error';
@@ -89,7 +90,6 @@ router.post("/userProfile/editProfile",function(req,res){
 
 
 router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), function(req,res){
-    debugger;
     let response = {};
     console.log(req.file);
     if(req.file){
@@ -126,6 +126,7 @@ router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), fu
                     }
                 });
             }
+            connection.release();
         });
     }
     else{

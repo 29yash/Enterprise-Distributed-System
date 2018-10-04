@@ -12,8 +12,16 @@ import axios from 'axios';
 
 class Navbar extends Component{
 
+    userData = null;
+
     constructor(props){
         super(props);
+    }
+
+    componentWillMount(){
+        if(cookie.load('HomeawayAuth')){
+            this.userData = JSON.parse(cookie.load('HomeawayAuth').substring(2));
+        }
     }
 
     logout(){
@@ -32,19 +40,23 @@ class Navbar extends Component{
 
     renderUser(){
         if(cookie.load('HomeawayAuth')){
-            let userData = JSON.parse(cookie.load('HomeawayAuth').substring(2));
-            let profilePicture = userData.user_profile_picture ? userData.user_profile_picture : profile;
+            let profilePicture = this.userData.user_profile_picture ? this.userData.user_profile_picture : profile;
             console.log(JSON.parse(cookie.load('HomeawayAuth').substring(2)));
             return(
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" className={this.props.theme === 'light' ? 'blue-link-text' : 'white-link-text'} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <img class="rounded-circle" height="30" width="30" src={profilePicture}/>
-                        {"    "+userData.user_first_name}
+                        {"    "+ this.userData.user_first_name}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <Link to="/viewProfile"><span class="dropdown-item">My Profile</span></Link><br/><br/>
+                        {
+                            this.userData.user_role === 'Owner' ? 
+                            <Link to="/ownerDashboard"><span class="dropdown-item">Dashboard</span></Link>
+                            :
+                            null
+                        }
+                        <br/><br/><Link to="/viewProfile"><span class="dropdown-item">My Profile</span></Link><br/><br/>
                         <span class="dropdown-item" onClick={this.logout.bind(this)}>Logout</span>
-                        {}
                     </div>
                 </div>
             );
@@ -65,6 +77,9 @@ class Navbar extends Component{
     }
 
     render(){
+        let user_role  = this. userData ? this.userData.user_role : null;
+        console.log(user_role);
+        
         return(
             <nav class="navbar navbar-light bg-light">
                 <a class="navbar-brand" href="#">
@@ -81,7 +96,12 @@ class Navbar extends Component{
                     </a>
                     </div>
                     <div class="list-your-property">
-                    <a>List Your Property</a>
+                        {
+                            user_role === 'Owner' ? 
+                                <Link to="/postProperty"><a>List Your Property</a></Link>
+                            :
+                                <a>List Your Property</a>
+                        }
                     </div>
                     <a class="bird-house"><img src={this.props.theme === 'light' ? birdhouse : birdHouseWhite} height="50" width="50"/></a>
                 </div>
