@@ -7,7 +7,7 @@ import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 import profile from '../../images/default-profile-pic.png';
 
-class ViewProfile extends Component{
+class EditProfile extends Component{
 
     userDetails = null;
     state = {
@@ -199,4 +199,4 @@ class ViewProfile extends Component{
         );
     }
 }
-export default ViewProfile;
+export default EditProfile;

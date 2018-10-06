@@ -9,6 +9,7 @@ import OwnerLogin from '../views/OwnerLogin/OwnerLogin';
 import OwnerSignUp from '../views/OwnerSignUp/OwnerSignUp';
 import OwnerDashboard from '../views/OwnerDashboard/OwnerDashboard';
 import PostProperty from '../views/PostProperty/PostProperty';
+import PropertyListing from '../views/PropertyListing/PropertyListing';
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -24,6 +25,7 @@ class Main extends Component {
                 <Route path="/editProfile" component={EditProfile}/>
                 <Route path="/ownerDashboard" component={OwnerDashboard}/>                
                 <Route path="/postProperty" component={PostProperty}/>
+                <Route path="/searchProperty" component={PropertyListing}/>
             </div>
         )
     }

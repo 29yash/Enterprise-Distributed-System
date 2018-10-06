@@ -41,7 +41,6 @@ class Navbar extends Component{
     renderUser(){
         if(cookie.load('HomeawayAuth')){
             let profilePicture = this.userData.user_profile_picture ? this.userData.user_profile_picture : profile;
-            console.log(JSON.parse(cookie.load('HomeawayAuth').substring(2)));
             return(
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" className={this.props.theme === 'light' ? 'blue-link-text' : 'white-link-text'} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

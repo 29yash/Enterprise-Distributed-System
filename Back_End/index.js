@@ -56,8 +56,9 @@ App.use(function (req, res, next) {
 
 App.use("/", LogoutRouter);
 App.use("/", UserProfileRouter);
-App.use("/", PostPropertyRouter);
-App.use("/", BookingRouter);
+// App.use("/", PostPropertyRouter);
+// App.use("/", BookingRouter);
+App.use("/", SearchPropertyRouter);
 
 var server = App.listen(8080, function () {
   console.log("Server started on port 8080");

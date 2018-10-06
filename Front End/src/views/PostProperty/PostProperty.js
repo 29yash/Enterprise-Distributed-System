@@ -67,9 +67,9 @@ class PostProperty extends Component{
     }
 
     setCurrentViewIndex(index){
-        this.setState({currentViewIndex : index});
-        // if(this.isDetailViewValid(index)){
-        // }
+        if(this.isDetailViewValid(index)){
+            this.setState({currentViewIndex : index});
+        }
     }
 
     isDetailViewValid(index){
@@ -326,7 +326,7 @@ class PostProperty extends Component{
                 images.push(
                     <img index={i} src={img} height="100" width="200"/>
                 );
-            })
+            });
         }
         return images;
     }

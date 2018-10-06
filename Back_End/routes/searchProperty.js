@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var getConnectionFromPool = require('../database');
 
-router.use(function (req, res, next) {
+router.use(function (req, res, next) {    
     let isBadRequest = false;
     if(!(req.body.location.trim().length > 0)){
         isBadRequest = true;
@@ -12,8 +12,7 @@ router.use(function (req, res, next) {
     }
     else if (!(req.body.guests.trim().length > 0)){
         isBadRequest = true;
-    }
-
+    }    
     if (isBadRequest) {
         response['success'] = false ;
         response['message'] = "All fields are Mandatory";
@@ -23,7 +22,7 @@ router.use(function (req, res, next) {
     }
 });
 
-router.get("/searchProperty",function(req,res){
+router.post("/searchProperty",function(req,res){
     let response = {};
     getConnectionFromPool((err, connection)=>{
         if(err){
@@ -33,7 +32,7 @@ router.get("/searchProperty",function(req,res){
             throw err; 
         }
         else{
-            let searchPropertyQuery = "select propertyId from properties where city =? AND guests >= ? AND NOT IN (select propertyId from propertyblockdates where ? BETWEEN startDate AND endDate OR ? BETWEEN startDate AND endDate AND propertyId in (select propertyId from properties where city =? AND guests >= ?))";
+            let searchPropertyQuery = "select * from properties where city =? AND guests >= ? AND NOT EXISTS (select propertyId from propertyblockdates where ? BETWEEN startDate AND endDate OR ? BETWEEN startDate AND endDate AND propertyId IN (select propertyId from properties where city =? AND guests >= ?))";
             let searchPropertyValues = [req.body.location, req.body.guests, req.body.arrivalDate, req.body.departureDate, req.body.location, req.body.guests];
             connection.query(searchPropertyQuery, searchPropertyValues,  function(err, rows){
                 console.log('Rows :'+ rows);            
@@ -51,6 +50,7 @@ router.get("/searchProperty",function(req,res){
                     }
                     else {
                         response['success'] = true ;
+                        response['message'] = 'No Properties Available';
                         response['properties'] = [];
                         res.status(200).send(response);
                     }
