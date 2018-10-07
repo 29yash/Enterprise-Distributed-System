@@ -25,7 +25,7 @@ class Navbar extends Component{
     }
 
     logout(){
-        axios.post('http://localhost:8080/logout', {}, {withCredentials: true}).then((response) => {
+        axios.delete('http://localhost:8080/logout', {withCredentials: true}).then((response) => {
             console.log(response);
             if(response.data.success){
                 this.props.history.push('/');
@@ -47,13 +47,12 @@ class Navbar extends Component{
                         <img class="rounded-circle" height="30" width="30" src={profilePicture}/>
                         {"    "+ this.userData.user_first_name}
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        {
-                            this.userData.user_role === 'Owner' ? 
-                            <Link to="/ownerDashboard"><span class="dropdown-item">Dashboard</span></Link>
-                            :
-                            null
-                        }
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"> 
+                            <Link to="/dashboard">
+                                <span class="dropdown-item">
+                                    {this.userData.user_role === 'Owner' ?  'Dashboard' : 'My Trips'}
+                                </span>
+                            </Link>
                         <br/><br/><Link to="/viewProfile"><span class="dropdown-item">My Profile</span></Link><br/><br/>
                         <span class="dropdown-item" onClick={this.logout.bind(this)}>Logout</span>
                     </div>

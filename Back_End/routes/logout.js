@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-router.post("/logout",function(req,res){
+router.delete("/logout",function(req,res){
     let response= {};
     response['success'] = true;
     response['message'] = "User Logged out successfully";

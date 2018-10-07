@@ -7,7 +7,7 @@ import ViewProfile from '../views/ViewProfile/ViewProfile';
 import EditProfile from '../views/EditProfile/EditProfile';
 import OwnerLogin from '../views/OwnerLogin/OwnerLogin';
 import OwnerSignUp from '../views/OwnerSignUp/OwnerSignUp';
-import OwnerDashboard from '../views/OwnerDashboard/OwnerDashboard';
+import Dashboard from '../views/Dashboard/Dashboard';
 import PostProperty from '../views/PostProperty/PostProperty';
 import PropertyListing from '../views/PropertyListing/PropertyListing';
 //Create a Main Component
@@ -23,7 +23,7 @@ class Main extends Component {
                 <Route path="/ownerSignUp" component={OwnerSignUp}/>
                 <Route path="/viewProfile" component={ViewProfile}/>
                 <Route path="/editProfile" component={EditProfile}/>
-                <Route path="/ownerDashboard" component={OwnerDashboard}/>                
+                <Route path="/dashboard" component={Dashboard}/>                
                 <Route path="/postProperty" component={PostProperty}/>
                 <Route path="/searchProperty" component={PropertyListing}/>
             </div>

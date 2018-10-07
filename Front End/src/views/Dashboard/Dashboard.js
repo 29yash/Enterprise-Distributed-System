@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import './OwnerDashboard.css';
+import './Dashboard.css';
 import {Redirect} from 'react-router';
 import cookie from 'react-cookies';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 
-class OwnerDashboard extends Component{
+class Dashboard extends Component{
 
     constructor(props){
         super(props);
@@ -26,6 +26,12 @@ class OwnerDashboard extends Component{
                     <h3>Booking History</h3>
                 </div>
                 <div class="row">
+                    <div class="col-lg-6">
+
+                    </div>
+                    <div class="col-lg-6">
+                    
+                    </div>
                 <table >
                     <tr>
                         <th>Booking ID</th>
@@ -57,4 +63,4 @@ class OwnerDashboard extends Component{
         )
     }
 }
-export default OwnerDashboard;
+export default Dashboard;
