@@ -23,9 +23,6 @@ class Dashboard extends Component{
                     console.log(response.data.bookings);
                     this.setState({bookings: response.data.bookings});
                 }
-                else{
-
-                }
             })
             .catch((error) =>{
                 console.log(error);

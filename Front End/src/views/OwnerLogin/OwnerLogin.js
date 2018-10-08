@@ -78,7 +78,7 @@ class OwnerLogin extends Component{
         axios.post('http://localhost:8080/login', {username, password, role},{withCredentials: true}).then((response) => {
             console.log(response);
             if(response.data.success){
-                this.props.history.push('/ownerDashboard');
+                this.props.history.push('/dashboard');
             }
         })
         .catch((error) =>{

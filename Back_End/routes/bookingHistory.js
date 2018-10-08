@@ -14,9 +14,11 @@ router.get("/bookingHistory",function(req,res){
         }
         else{
             let user_email = req.cookies['HomeawayAuth']['user_email'];
+            let user_role = req.cookies['HomeawayAuth']['user_role'];
             console.log(user_email);
-            let getBookings = 'SELECT * FROM bookings where username =?';
-            connection.query(getBookings, [user_email],  function(err, rows){           
+            let getBookingsTraveller = 'SELECT * FROM bookings where username =?';
+            let getBookingsOwner = 'SELECT * FROM bookings where propertyId IN (SELECT propertyId from properties where username =?)';
+            connection.query(user_role === 'Owner' ? getBookingsOwner : getBookingsTraveller, [user_email], function(err, rows){           
                 console.log(rows);
                 if(err){
                     response['success'] = false ;

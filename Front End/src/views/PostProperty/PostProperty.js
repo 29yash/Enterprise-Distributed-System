@@ -405,7 +405,7 @@ class PostProperty extends Component{
             console.log(response);
             if(response.data.success){
                 // this.setState({isAckPositive:true, ackMessage : response.data.message});
-                this.props.history.push('/ownerDashboard');
+                this.props.history.push('/dashboard');
             }
             else{
                 this.setState({isAckPositive:false, ackMessage : response.data.message})

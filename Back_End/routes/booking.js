@@ -40,8 +40,8 @@ router.post("/bookProperty", validateRequest,function(req,res){
         }
         else{
             let username = req.cookies['HomeawayAuth']['user_email'];
-            let checkBookDatesQuery = 'select * from propertyblockdates where propertyId=? AND ? BETWEEN startDate AND endDate OR ? BETWEEN startDate AND endDate';
-            connection.query(checkBookDatesQuery, [req.body.propertyId, req.body.arrivalDate, req.body.departureDate],function(err, rows){
+            let checkBookDatesQuery = 'select * from propertyblockdates where propertyId=? AND (CAST(? AS DATE) <= startDate AND startDate <= CAST(? AS DATE)) OR (CAST(? AS DATE) <= endDate AND endDate<= CAST(? AS DATE))';
+            connection.query(checkBookDatesQuery, [req.body.propertyId, req.body.arrivalDate, req.body.departureDate, req.body.arrivalDate, req.body.departureDate],function(err, rows){
                 if(err){
                     response['success'] = false ;
                     response['message'] = 'Internal Server Error';
