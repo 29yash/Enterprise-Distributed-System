@@ -10,7 +10,7 @@ const cValue = "HomeawayAuth=j%3A%7B%22user_email%22%3A%22firstUser%40gmail.com%
 it("Should get logged in for traveller with status code 200, success true and message User logged in successfully", function(done){
     chai.request('http://localhost:8080')
     .post('/login')
-    .send({ "username": "firstUser@gmail.com", "password" : "12345", "role":"Traveller" })
+    .send({ "username": "firstUser@gmail.com", "password" : "123456", "role":"Traveller" })
     .end(function (err, res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
