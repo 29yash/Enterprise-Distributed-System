@@ -10,6 +10,7 @@ import OwnerSignUp from '../views/OwnerSignUp/OwnerSignUp';
 import Dashboard from '../views/Dashboard/Dashboard';
 import PostProperty from '../views/PostProperty/PostProperty';
 import PropertyListing from '../views/PropertyListing/PropertyListing';
+import ViewProperty from '../views/ViewProperty/ViewProperty';
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -26,6 +27,7 @@ class Main extends Component {
                 <Route path="/dashboard" component={Dashboard}/>                
                 <Route path="/postProperty" component={PostProperty}/>
                 <Route path="/searchProperty" component={PropertyListing}/>
+                <Route path="/viewProperty" component={ViewProperty}/>
             </div>
         )
     }

@@ -57,12 +57,12 @@
     align-items: center;
 }
 
-.carousel-inner{
+.list-property .carousel-inner{
     height: 200px;
     width: 360px;
 }
 
-.carousel{
+.list-property .carousel{
     width: 360px;
 }
 

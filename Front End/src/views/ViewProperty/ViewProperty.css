@@ -1,0 +1,120 @@
+.view-property{
+    margin-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;
+    width: 100%
+}
+
+.view-property .row{
+    display: flex;
+    justify-content: center;
+}
+
+.view-property .alert-success, .view-property .alert-danger{
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.view-property .col-lg-8{
+    margin-left: 10px;
+}
+
+.view-property .carousel-inner{
+    height: 400px;
+    width: 100%;
+}
+
+.view-property .property-headline{
+    text-align: center;
+}
+
+.view-property .property-detail{
+    display: flex;
+}
+
+.view-property .property-detail .key, .property-description .key{
+    margin-right: 50px;
+    margin-left: 10px;
+}
+
+.view-property .carousel{
+    width: 100%;
+}
+
+.view-property .detail-item{
+    margin-left: 20px;
+    margin-right: 20px;
+    flex:1;
+    text-align: center;
+}
+
+.view-property .detail-item h4{
+    color: #aeb2b4;
+    font-weight: 100
+}
+
+.view-property .property-description{
+    display: flex;
+    margin-top: 10px;
+}
+
+.view-property .booking-info{
+    padding: 20px;
+    margin-right: 20px;
+    border: 1px solid #aeb2b4;
+}
+
+.view-property .booking-info .price {
+    margin-bottom: 10px;
+}
+
+.booking-info .price span{
+    margin-left: 10px;
+}
+.booking-info .price h2 {
+    margin-bottom: 0px
+}
+
+.booking-info .dates{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.booking-info .dates span, .booking-info .guests span  {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #aeb2b4;
+    border-radius: 10px;
+    margin-right: 10px;
+    text-align: center
+}
+
+.booking-info .guests{
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.booking-info .total{
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    padding: 20px;
+    padding-top: 10px;
+}
+
+.booking-info .book-now{
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-info .book-now span{
+    margin-bottom: 20px;
+    text-align: center;
+    color: darkorange;
+    font-size: 18px
+}
+
+
+

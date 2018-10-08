@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var getConnectionFromPool = require('../database');
+var becrypt = require('../beCrypt');
 
 router.post("/login",function(req,res){
     let response = {};
@@ -28,26 +29,33 @@ router.post("/login",function(req,res){
           else {
             console.log(rows);
             if(rows.length > 0){
-                if(rows[0].user_password === req.body.password){
-                    let cookie = {
-                      user_email: req.body.username,
-                      user_first_name: rows[0].user_first_name,
-                      user_last_name: rows[0].user_last_name,
-                      user_role: req.body.role,
-                      user_profile_picture : rows[0].pic_url
-                    };
-                    res.cookie('HomeawayAuth', cookie, {maxAge: 900000, httpOnly: false, path : '/'});
-                    req.session.user = rows[0];
-                    response['success'] = true;
-                    response['message'] = "User Logged in successfully";
-                    response['user'] = rows[0];
-                    res.status(200).send(response);
-                }
-                else{
+                becrypt.compareHash(req.body.password, rows[0].user_password, function (err, isMatch) {
+                    if (isMatch && !err) {
+                        let cookie = {
+                            user_email: req.body.username,
+                            user_first_name: rows[0].user_first_name,
+                            user_last_name: rows[0].user_last_name,
+                            user_role: req.body.role,
+                            user_profile_picture : rows[0].pic_url
+                        };
+                        res.cookie('HomeawayAuth', cookie, {maxAge: 900000, httpOnly: false, path : '/'});
+                        req.session.user = rows[0];
+                        response['success'] = true;
+                        response['message'] = "User Logged in successfully";
+                        response['user'] = rows[0];
+                        res.status(200).send(response);
+                    } 
+                    else {
+                        response['success'] = false ;
+                        response['message'] = "Email and Password does not match";
+                        res.status(401).send(response);
+                    }
+                }, function (err) {
+                    console.log(err);
                     response['success'] = false ;
-                    response['message'] = "Email and Password does not match";
+                    response['message'] = "Authorisation Failed";
                     res.status(401).send(response);
-                }
+                });
             }
             else{
                 response['success'] = false ;

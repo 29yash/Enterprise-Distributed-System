@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var getConnectionFromPool = require('../database');
 
-router.use(function (req, res, next) {    
+var validateRequest = function (req, res, next) {    
     let isBadRequest = false;
     if(!(req.body.location.trim().length > 0)){
         isBadRequest = true;
@@ -20,9 +20,9 @@ router.use(function (req, res, next) {
     } else {
         next();
     }
-});
+};
 
-router.post("/searchProperty",function(req,res){
+router.post("/searchProperty", validateRequest, function(req,res){
     let response = {};
     getConnectionFromPool((err, connection)=>{
         if(err){
@@ -32,8 +32,8 @@ router.post("/searchProperty",function(req,res){
             throw err; 
         }
         else{
-            let searchPropertyQuery = "select * from properties where city =? AND guests >= ? AND NOT EXISTS (select propertyId from propertyblockdates where ? BETWEEN startDate AND endDate OR ? BETWEEN startDate AND endDate AND propertyId IN (select propertyId from properties where city =? AND guests >= ?))";
-            let searchPropertyValues = [req.body.location, req.body.guests, req.body.arrivalDate, req.body.departureDate, req.body.location, req.body.guests];
+            let searchPropertyQuery = "select * from properties WHERE city =? AND guests >= ? AND propertyId NOT IN (select propertyId from propertyblockdates where (CAST(? AS DATE) <= startDate AND startDate <= CAST(? AS DATE)) OR (CAST(? AS DATE) <= endDate AND endDate<= CAST(? AS DATE)) AND propertyId IN (select propertyId from properties where city =? AND guests >= ?))";
+            let searchPropertyValues = [req.body.location, req.body.guests, req.body.arrivalDate, req.body.departureDate, req.body.arrivalDate, req.body.departureDate, req.body.location, req.body.guests];
             connection.query(searchPropertyQuery, searchPropertyValues,  function(err, rows){
                 console.log('Rows :'+ rows);            
                 if(err){

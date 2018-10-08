@@ -3,18 +3,20 @@ var router = express.Router();
 var getConnectionFromPool = require('../database');
 
 
-router.use(function (req, res, next) {
+var validateRequest = function (req, res, next) {
     let isBadRequest = false;
-    if(!(req.body.propertyId.trim().length > 0)){
+    console.log(req.body);
+    
+    if(!(req.body.propertyId)){
         isBadRequest = true;
     }
-    else if(!(req.body.startDate.trim().length > 0 && req.body.endDate.trim().length > 0)){
+    else if(!(req.body.arrivalDate.trim().length > 0 && req.body.departureDate.trim().length > 0)){
         isBadRequest = true;
     }
     else if (!(req.body.guests.trim().length > 0)){
         isBadRequest = true;
     }
-    else if (!(req.body.amount.trim().length > 0)){
+    else if (!(req.body.amount)){
         isBadRequest = true;    
     }
 
@@ -25,9 +27,9 @@ router.use(function (req, res, next) {
     } else {
         next();
     }
-});
+};
 
-router.post("/bookProperty",function(req,res){
+router.post("/bookProperty", validateRequest,function(req,res){
     let response = {};
     getConnectionFromPool((err, connection)=>{
         if(err){
@@ -39,7 +41,7 @@ router.post("/bookProperty",function(req,res){
         else{
             let username = req.cookies['HomeawayAuth']['user_email'];
             let checkBookDatesQuery = 'select * from propertyblockdates where propertyId=? AND ? BETWEEN startDate AND endDate OR ? BETWEEN startDate AND endDate';
-            connection.query(checkBookDatesQuery, [req.body.propertyId, req.body.startDate, req.body.endDate],function(err, rows){
+            connection.query(checkBookDatesQuery, [req.body.propertyId, req.body.arrivalDate, req.body.departureDate],function(err, rows){
                 if(err){
                     response['success'] = false ;
                     response['message'] = 'Internal Server Error';
@@ -50,8 +52,8 @@ router.post("/bookProperty",function(req,res){
                     if(!(rows.length > 0)){
                         let bookingQuery = 'INSERT INTO bookings(propertyId, username, startDate, endDate, guests, amount) VALUES (?,?,?,?,?,?)';
                         let blockDateQuery = 'INSERT INTO propertyblockdates(propertyId, startDate, endDate) VALUES (?,?,?)';
-                        let bookingQueryValues = [req.body.propertyId, username, req.body.startDate, req.body,endDate, req.body.guests, req.body.amount];
-                        let blockDateQueryValues = [req.body.propertyId, req.body.startDate, req.body,endDate];
+                        let bookingQueryValues = [req.body.propertyId, username, req.body.arrivalDate, req.body.departureDate, req.body.guests, req.body.amount];
+                        let blockDateQueryValues = [req.body.propertyId, req.body.arrivalDate, req.body.departureDate];
                         connection.query(bookingQuery, bookingQueryValues, function(err, result){
                             if(err){
                                 response['success'] = false ;

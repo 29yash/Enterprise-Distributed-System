@@ -106,9 +106,15 @@ class PropertyListing extends Component{
         }
     }
 
+    showProperty(property){
+        console.log(property);
+        let { location, arrivalDate, departureDate, guests } = this.state;
+        this.props.history.push({pathname :'/viewProperty',  state: {property, location, arrivalDate, departureDate, guests} });
+    }
+
     renderPropertyItem(property,index){
         return(
-            <div class="property-item">
+            <div class="property-item" onClick={this.showProperty.bind(this, property)}>
                 <div class="pro-photos">
                     {this.renderPhotoCrousel(property, index)}
                 </div>

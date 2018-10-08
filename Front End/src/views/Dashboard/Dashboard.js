@@ -8,8 +8,31 @@ import Navbar from '../Navbar/Navbar';
 
 class Dashboard extends Component{
 
+    state= {
+        bookings : []
+    }
+
     constructor(props){
         super(props);
+    }
+
+    componentDidMount(){
+        axios.get('http://localhost:8080/bookingHistory',{withCredentials : true})
+            .then((response) => {
+                if(response.data.success){
+                    console.log(response.data.bookings);
+                    this.setState({bookings: response.data.bookings});
+                }
+                else{
+
+                }
+            })
+            .catch((error) =>{
+                console.log(error);
+                if(error.response.status == 401){
+                    this.props.history.push('/');
+                }
+            });
     }
 
     render(){        
@@ -26,37 +49,36 @@ class Dashboard extends Component{
                     <h3>Booking History</h3>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6">
-
-                    </div>
-                    <div class="col-lg-6">
-                    
-                    </div>
-                <table >
+                <table>
                     <tr>
                         <th>Booking ID</th>
-                        <th>Traveller</th> 
+                        <th>Property ID</th> 
                         <th>Arrival</th>
                         <th>Departure</th>
                         <th>No. Of Guests</th>
                         <th>Amount Paid</th>
                     </tr>
-                    <tr>
-                        <td>Jill</td>
-                        <td>Smith</td> 
-                        <td>50</td>
-                        <td>Smith</td> 
-                        <td>50</td>
-                        <td>Smith</td>
-                    </tr>
-                    <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td> 
-                        <td>94</td>
-                        <td>Eve</td>
-                        <td>Jackson</td> 
-                        <td>94</td>
-                    </tr>
+                    {
+                        this.state.bookings.length > 0 ?
+                            this.state.bookings.map((booking, index)=>{
+                                let rows = [];
+                                let arrival = new Date(booking.startDate);
+                                let depart = new Date(booking.endDate)
+                                rows.push(
+                                    <tr id={index}>
+                                        <td>{booking.bookingId}</td>
+                                        <td>{booking.propertyId}</td> 
+                                        <td>{arrival.getFullYear() + '-'+eval(arrival.getMonth()+1)+ '-' +arrival.getDate()}</td>
+                                        <td>{depart.getFullYear() + '-'+eval(depart.getMonth()+1)+ '-' +depart.getDate()}</td>
+                                        <td>{booking.guests}</td>
+                                        <td>{booking.amount}</td>
+                                </tr>
+                                );
+                                return rows;
+                            })
+                        :
+                        <h3>There are no bookings made yet</h3>
+                    }
                 </table>
                 </div>
             </div>

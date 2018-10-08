@@ -22,7 +22,7 @@ router.post("/postProperty/uploadPhoto", uploadPhoto.single('propertyPicture'), 
 
 
 
-router.use(function (req, res, next) {
+var validateRequest = function (req, res, next) {
     let response = {}
     console.log(req.body);
     let isBadRequest = false;
@@ -52,10 +52,10 @@ router.use(function (req, res, next) {
     else {
         next();
     }
-});
+};
 
 
-router.post("/postProperty",function(req,res){
+router.post("/postProperty", validateRequest, function(req,res){
     let response = {};
     getConnectionFromPool((err, connection)=>{
         if(err){
