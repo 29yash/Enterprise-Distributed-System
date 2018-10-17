@@ -1,0 +1,29 @@
+.owner-dashboard{
+    width: inherit;
+    margin-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;
+}
+
+.owner-dashboard .row{
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}

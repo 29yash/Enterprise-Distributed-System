@@ -1,0 +1,64 @@
+.root{
+    width: inherit;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;
+    display: flex;
+    flex-direction: column;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    height: fill-available;
+}
+
+.picture-div{
+    align-items: flex-end;
+    width: inherit;
+    margin-right: 30px;
+    padding-top: 80px;
+}
+
+.picture-div img{
+    margin-bottom: 100px;
+}
+
+.heading {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.heading h4 {
+    color:#72787c;
+}
+
+.rounded-circle {
+    border-radius: 100%
+}
+.col-lg-5{
+    display: flex;
+    flex-direction: column;
+}
+
+.label-mark{
+    color: #72787c;
+    font-weight: 400;
+}
+
+.about_me{
+    font-weight: 600;
+}
+
+.field{
+    display: flex;
+}
+
+.edit-profile{
+    margin-top: 30px;
+}
+
+.profile-info{  
+    flex: 10;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #cccccc;
+    padding-top: 20px;
+}
