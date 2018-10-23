@@ -1,8 +1,7 @@
 import WebService from "../services/WebService";
 import { history } from "../router/history";
 import AppConstants from "../constant/AppConstants";
-export const LOGIN_SUCCESS = "login_success";
-export const LOGIN_FAILURE= "login_failure";
+import AppActions from "../constant/AppActions";
 
 export function userLogin(values){   
     return (dispatch) => WebService.getInstance().login(values, (response)=>{
@@ -16,11 +15,11 @@ export function userLogin(values){
 }
 
 const loginSuccess = (response) => ({
-    type: LOGIN_SUCCESS,
+    type: AppActions.LOGIN_SUCCESS,
     payload:response
 });
 
 const loginFailure = (error) => ({
-    type: LOGIN_FAILURE,
+    type: AppActions.LOGIN_FAILURE,
     payload:error
 });

@@ -42,13 +42,18 @@ router.post("/signup",function(req,res){
                     }
                     else{
                         if(result.affectedRows > 0){
+                            let cookie = {
+                                user_email: req.body.username,
+                                user_first_name: req.body.firstName,
+                                user_last_name: req.body.lastName,
+                                user_role: req.body.role,
+                                user_profile_picture : null
+                            };
+                            req.session.user = cookie;
+                            res.cookie('HomewayAuth', cookie ,{maxAge: 900000, httpOnly: false, path : '/'});
                             response['success'] = true;
                             response['message'] = "User Registered successfully";
-                            res.cookie('HomewayAuth', 
-                            {user_email: req.body.email, user_first_name: req.body.firstName, 
-                                user_last_name: req.body.lastName},
-                                {maxAge: 900000, httpOnly: false, path : '/'});
-                                res.status(200).send(response);
+                            res.status(200).send(response);
                         }
                         else{
                             response['success'] = false;

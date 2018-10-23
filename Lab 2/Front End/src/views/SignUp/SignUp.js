@@ -4,6 +4,9 @@ import logo from '../../images/loginHeader.svg';
 import home from '../../images/home_icon.svg';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import {userSignup} from '../../actions/actions_signup';
+import { connect } from "react-redux";
+import AppConstants from "../../constant/AppConstants";
 
 class SignUp extends Component{
     constructor(props){
@@ -12,9 +15,7 @@ class SignUp extends Component{
             password: '',
             firstName: '',
             lastName:'',
-            email:'',
-            failedSignUp: false,
-            errorMessage:''
+            email:''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -24,10 +25,10 @@ class SignUp extends Component{
     }
 
     renderFailedSignUp(){
-        if(this.state.failedSignUp){
+        if(this.props.failedSignUp){
             return(
                 <div class="alert alert-danger" role="alert">
-                    {this.state.errorMessage}
+                    {this.props.errorMessage}
                 </div>
             );
         }
@@ -40,7 +41,7 @@ class SignUp extends Component{
                   <span className="logo"><Link to="/"><img src={logo} width="200" height="50" /></Link></span>
                   <span className="home"><img src={home} width="50" height="50" /></span>
                 </div>
-                <div className="row main">
+                <div className="row signup-main">
                     {this.renderFailedSignUp()}
                     <div className="loginContainer">
                         <h1>Sign up for HomeAway</h1>
@@ -73,22 +74,14 @@ class SignUp extends Component{
     handleSubmit(event) {
         event.preventDefault();
         const { firstName, lastName, email, password } = this.state;
-        let role = 'Traveller';
-        axios.post('http://localhost:8080/signUp', { firstName, lastName, email, password, role },{withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                this.props.history.push('/');
-            }
-            else{
-                this.setState({
-                    failedSignUp: true,
-                    errorMessage: response.data.message
-                });
-            }
-        })
-        .catch((error) =>{
-            console.log(error); 
-        });
+        let role = AppConstants.USER_ROLE_TRAVELLER;
+        this.props.userSignup({ firstName, lastName, email, password, role });
     }
 }
-export default SignUp;
+
+function mapStateToProps(state) {
+    const { failedSignUp, errorMessage  } = state.signup;
+    return { failedSignUp, errorMessage };
+}
+
+export default connect(mapStateToProps, {userSignup})(SignUp);

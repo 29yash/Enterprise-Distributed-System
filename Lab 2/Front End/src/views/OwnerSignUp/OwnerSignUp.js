@@ -5,6 +5,9 @@ import home from '../../images/home_icon.svg';
 import {Link} from 'react-router-dom';
 import ownerLogin from '../../images/owner-login.png';
 import axios from 'axios';
+import {userSignup} from '../../actions/actions_signup';
+import { connect } from "react-redux";
+import AppConstants from "../../constant/AppConstants";
 
 class OwnerSignUp extends Component{
     constructor(props){
@@ -13,9 +16,7 @@ class OwnerSignUp extends Component{
             password: '',
             firstName: '',
             lastName:'',
-            email:'',
-            failedSignUp: false,
-            errorMessage:''
+            email:''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -25,10 +26,10 @@ class OwnerSignUp extends Component{
     }
 
     renderFailedSignUp(){
-        if(this.state.failedSignUp){
+        if(this.props.failedSignUp){
             return(
                 <div class="alert alert-danger" role="alert">
-                    {this.state.errorMessage}
+                    {this.props.errorMessage}
                 </div>
             );
         }
@@ -77,22 +78,14 @@ class OwnerSignUp extends Component{
     handleSubmit(event) {
         event.preventDefault();
         const { firstName, lastName, email, password } = this.state;
-        let role =  'Owner';
-        axios.post('http://localhost:8080/signUp', { firstName, lastName, email, password, role},{withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                this.props.history.push('/dashboard');
-            }
-            else{
-                this.setState({
-                    failedSignUp: true,
-                    errorMessage: response.data.message
-                });
-            }
-        })
-        .catch((error) =>{
-            console.log(error); 
-        });
+        let role =  AppConstants.USER_ROLE_OWNER;
+        this.props.userSignup({ firstName, lastName, email, password, role});
     }
 }
-export default OwnerSignUp;
+
+function mapStateToProps(state) {
+    const { failedSignUp, errorMessage  } = state.signup;
+    return { failedSignUp, errorMessage };
+}
+
+export default connect(mapStateToProps, {userSignup})(OwnerSignUp);;

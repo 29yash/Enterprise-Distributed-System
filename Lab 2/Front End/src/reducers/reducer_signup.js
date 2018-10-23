@@ -1,20 +1,15 @@
 import AppActions from "../constant/AppActions";
 
 export default function(state = {}, action) {
-
   console.log(action);
-    
   switch (action.type) {
-    case AppActions.LOGIN_SUCCESS:
+    case AppActions.SIGNUP_SUCCESS:
       return {
-        loggedIn: true,
-        loginFailed: false, 
-        user: action.payload.user
+        failedSignUp: false
       };
-    case AppActions.LOGIN_FAILURE:
+    case AppActions.SIGNUP_FAILURE:
       return {
-        loggedIn: false,
-        loginFailed: true, 
+        failedSignUp: true, 
         errorMessage: action.payload
       };
     default:
