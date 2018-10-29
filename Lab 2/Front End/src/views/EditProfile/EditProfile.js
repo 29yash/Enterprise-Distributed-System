@@ -1,115 +1,78 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './EditProfile.css';
-import {Redirect} from 'react-router';
+import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 import profile from '../../images/default-profile-pic.png';
 import { connect } from "react-redux";
+import {fetchUserProfile, updateUserProfile, uploadUserProfilePicture} from '../../actions/actions_user';
+var Loader = require('react-loader');
 
-
-class EditProfile extends Component{
+class EditProfile extends Component {
 
     userDetails = null;
     state = {
-        ackMessage : null,
+        ackMessage: null,
         isAckPositive: null,
-        user_aboutme: '',
-        user_city: '',
-        user_company: '',
-        user_first_name: "",
-        user_hometown: '',
-        user_languages: '',
-        user_last_name: "",
-        user_school: '',
-        user_gender: "Male",
-        user_phone_number: "",
-        profilePictureUrl:null,
-        profilePicture:null,
-        isFormDirty:false
+        userProfile: {
+            user_aboutme: '',
+            user_city: '',
+            user_company: '',
+            user_first_name: "",
+            user_hometown: '',
+            user_languages: '',
+            user_last_name: "",
+            user_school: '',
+            user_gender: "Male",
+            user_phone_number: "",
+            profilePictureUrl: null
+        },
+        isFormDirty: false
     };
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
-    componentDidMount(){
-        // this.userDetails = this.props.location.state.userDetails;
-        // this.setState({
-        //     user_aboutme: this.userDetails.user_aboutme,
-        //     user_city: this.userDetails.user_city,
-        //     user_company: this.userDetails.user_company,
-        //     user_first_name: this.userDetails.user_first_name,
-        //     user_hometown: this.userDetails.user_hometown,
-        //     user_languages: this.userDetails.user_languages,
-        //     user_last_name: this.userDetails.user_last_name,
-        //     user_school: this.userDetails.user_school,
-        //     user_gender: this.userDetails.user_gender,
-        //     user_phone_number: this.userDetails.user_phone_number,
-        //     profilePictureUrl: this.userDetails.pic_url
-        // });
+    componentWillMount(){
+        this.props.fetchUserProfile();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
+        this.setState({
+            userProfile: nextProps.userProfile, 
+            ackMessage: nextProps.message ? nextProps.message : nextProps.errorMessage,
+            isAckPositive: nextProps.errorMessage ? false : true
+        });
     }
 
     onChange = (event) => {
-        if(event.target.name == 'profilePicture'){
-            // this.setState({profilePicture: event.target.files[0]});
+        if (event.target.name == 'profilePicture') {
             this.uploadProfilePicture(event.target.files[0]);
-            // console.log(event.target.files[0]);
-            // let reader = new FileReader();
-            // reader.onload = (e) => {
-            //     this.setState({profilePicture: e.target.result});
-            // };
-            // reader.readAsDataURL(event.target.files[0]); 
         }
-        else{
-            this.setState({ [event.target.name]: event.target.value, isFormDirty: true });
+        else {
+            let userProfile = Object.assign(this.state.userProfile, { [event.target.name]: event.target.value });
+            this.setState({ userProfile, isFormDirty: true });
         }
     }
 
-    uploadProfilePicture(profilePicture){
+    uploadProfilePicture(profilePicture) {
         let formData = new FormData();
         formData.append('profilePicture', profilePicture);
-        axios.post('http://localhost:8080/userProfile/uploadPhoto', formData, {withCredentials: true})
-        .then((response) => {
-            if(response.data.success){
-                this.setState({profilePictureUrl: response.data.url});
-            }
-            else{
-                console.log(response.data.message);
-                this.setState({isAckPositive:false, ackMessage : response.data.message})
-            }
-        })
-        .catch((error) =>{
-            console.log(error);
-            // this.setState({isAckPositive:false, ackMessage : error})
-        });
+        this.props.uploadUserProfilePicture(formData);
     }
 
-    handleSubmit(event){
+    handleSubmit(event) {
         event.preventDefault();
-        const { user_aboutme, user_city, user_company, user_first_name, user_hometown, 
-            user_languages, user_last_name, user_school, user_gender, user_phone_number } = this.state;
-        axios.post('http://localhost:8080/userProfile/editProfile', {
-            user_aboutme, user_city, user_company, user_first_name, user_hometown, 
-            user_languages, user_last_name, user_school, user_gender, user_phone_number }, {withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                this.setState({isAckPositive:true, ackMessage : response.data.message});
-            }
-            else{
-                this.setState({isAckPositive:false, ackMessage : response.data.message})
-            }
-            window.scrollTo(0, 0);
-        })
-        .catch((error) =>{
-            console.log(error); 
-        });
+        this.props.updateUserProfile(this.state.userProfile);
     }
 
-    renderAcknowledgement(){
-        if(this.state.ackMessage){
-            return(
+    renderAcknowledgement() {
+        if (this.state.ackMessage) {
+            return (
                 <div class="alert" className={this.state.isAckPositive ? 'alert-success' : 'alert-danger'} role="alert">
                     {this.state.ackMessage}
                 </div>
@@ -118,17 +81,17 @@ class EditProfile extends Component{
     }
 
 
-    renderProfilePicture(){
-        let profilePicture = this.props.userProfile.pic_url ? this.props.userProfile.pic_url : profile; 
-        return(
+    renderProfilePicture() {
+        let profilePicture = this.state.userProfile.pic_url ? this.state.userProfile.pic_url : profile;
+        return (
             <div class="avatar-upload">
                 <div class="avatar-edit">
                     <input type='file' id="profilePicture" name="profilePicture" onChange={this.onChange} accept=".png, .jpg, .jpeg" />
-                    <label for="profilePicture"><span class="glyphicon glyphicon-pencil" style={{"color":"#116db3"}}></span></label>
+                    <label for="profilePicture"><span class="glyphicon glyphicon-pencil" style={{ "color": "#116db3" }}></span></label>
                 </div>
                 <div class="avatar-preview">
                     <div id="imagePreview">
-                        <img src={profilePicture} style={{'height':"inherit", 'width':"inherit", 'border-radius':'100%'}}/>
+                        <img src={profilePicture} style={{ 'height': "inherit", 'width': "inherit", 'border-radius': '100%' }} />
                     </div>
                 </div>
             </div>
@@ -136,75 +99,91 @@ class EditProfile extends Component{
     }
 
 
-    render(){        
+    render() {
         let redirectVar = null;
-        if(!cookie.load('HomeawayAuth')){
-            redirectVar = <Redirect to= "/"/>
+        if (!cookie.load('HomeawayAuth')) {
+            redirectVar = <Redirect to="/" />
         }
-        return(
-            <div class="container edit-profile">
-                {redirectVar}
-                <Navbar theme="light"></Navbar>
-                <div class="profile-container">
-                    {this.renderAcknowledgement()}
-                    <div class="row profile-pic">
-                        {this.renderProfilePicture()}
-                        {/* <img class="rounded-circle" height="100" width="100" src={profile}/> */}
-                        <h1>{this.props.userProfile.user_first_name +" "+ this.props.userProfile.user_last_name}</h1>
-                    </div>
-                    <div class="row profile-information">
-                        <div class="col-9-lg">
-                            <h2>Profile Information</h2><br/>
-                            <form onSubmit={this.handleSubmit.bind(this)}>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_first_name" value={this.props.userProfile.user_first_name} placeholder="First Name" required/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_last_name" value={this.props.userProfile.user_last_name} placeholder="Last Name" required/>
-                                </div>
-                                <div class="form-group">
-                                    <textarea class="form-control form-control-lg" rows="4" onChange={this.onChange} name="user_aboutme" value={this.props.userProfile.user_aboutme} placeholder="About me"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_city" value={this.props.userProfile.user_city} placeholder="City" />
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_company" value={this.props.userProfile.user_company} placeholder="Company" />
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_school" value={this.props.userProfile.user_school} placeholder="School"/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_hometown" value={this.props.userProfile.user_hometown} placeholder="Hometown"/>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" name="user_gender" value={this.props.userProfile.user_gender} onChange={this.onChange}>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_languages" value={this.props.userProfile.user_languages} placeholder="Languages"/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" pattern="^\d{3}-\d{3}-\d{4}$" onChange={this.onChange} name="user_phone_number" value={this.props.userProfile.user_phone_number} placeholder="Phone Number (xxx-xxx-xxx)"/>
-                                </div>
-                                <div class="form-group save-button">
-                                    <button type="submit" class="btn btn-primary btn-lg" disabled={!this.state.isFormDirty}>Save Changes</button>
-                                </div>
-                            </form>
+
+        if(this.props.userProfile == null){
+            return(
+                <div class="container root">
+                    <Navbar theme="light"></Navbar>
+                    <Loader loaded={true} lines={13} length={20} width={10} radius={30}
+                        corners={1} rotate={0} direction={1} color="#000" speed={1}
+                        trail={60} shadow={false} hwaccel={false} className="spinner"
+                        zIndex={2e9} top="50%" left="50%" scale={1.00}
+                        loadedClassName="loadedContent">
+                    </Loader>
+                </div>
+            );
+        }
+        else{
+            return (
+                <div class="container edit-profile">
+                    {redirectVar}
+                    <Navbar theme="light"></Navbar>
+                    <div class="profile-container">
+                        {this.renderAcknowledgement()}
+                        <div class="row profile-pic">
+                            {this.renderProfilePicture()}
+                            {/* <img class="rounded-circle" height="100" width="100" src={profile}/> */}
+                            <h1>{this.state.userProfile.user_first_name + " " + this.state.userProfile.user_last_name}</h1>
+                        </div>
+                        <div class="row profile-information">
+                            <div class="col-9-lg">
+                                <h2>Profile Information</h2><br />
+                                <form onSubmit={this.handleSubmit.bind(this)}>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_first_name" value={this.state.userProfile.user_first_name} placeholder="First Name" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_last_name" value={this.state.userProfile.user_last_name} placeholder="Last Name" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control form-control-lg" rows="4" onChange={this.onChange} name="user_aboutme" value={this.state.userProfile.user_aboutme} placeholder="About me"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_city" value={this.state.userProfile.user_city} placeholder="City" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_company" value={this.state.userProfile.user_company} placeholder="Company" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_school" value={this.state.userProfile.user_school} placeholder="School" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_hometown" value={this.state.userProfile.user_hometown} placeholder="Hometown" />
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" name="user_gender" value={this.state.userProfile.user_gender} onChange={this.onChange}>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" onChange={this.onChange} name="user_languages" value={this.state.userProfile.user_languages} placeholder="Languages" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-lg" pattern="^\d{3}-\d{3}-\d{4}$" onChange={this.onChange} name="user_phone_number" value={this.state.userProfile.user_phone_number} placeholder="Phone Number (xxx-xxx-xxx)" />
+                                    </div>
+                                    <div class="form-group save-button">
+                                        <button type="submit" class="btn btn-primary btn-lg" disabled={!this.state.isFormDirty}>Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
 function mapStateToProps(state) {
-    const { userProfile, errorMessage, loading  } = state.userProfile;
-    return { userProfile, errorMessage, loading };
+    const { userProfile, message, errorMessage, loading } = state.userProfile;
+    return { userProfile, message, errorMessage, loading };
 }
 
-export default connect(mapStateToProps, null)(EditProfile);
+export default connect(mapStateToProps, {fetchUserProfile, updateUserProfile, uploadUserProfilePicture})(EditProfile);

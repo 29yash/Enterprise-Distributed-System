@@ -38,7 +38,7 @@ App.use(function(req, res, next) {
   next();
 });
 
-App.use("/photos", express.static(__dirname + '\\photos'));
+App.use("/photos", express.static(__dirname + '/photos'));
 
 App.use("/", LoginRouter);
 App.use("/", SignupRouter);

@@ -88,8 +88,8 @@ class ViewProfile extends Component{
 }
 
 function mapStateToProps(state) {
-    const { userProfile, errorMessage, loading  } = state.userProfile;
-    return { userProfile, errorMessage, loading };
+    const { userProfile, message, loading  } = state.userProfile;
+    return { userProfile, message, loading };
 }
 
 export default connect(mapStateToProps, {fetchUserProfile})(ViewProfile);

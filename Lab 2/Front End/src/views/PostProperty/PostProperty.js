@@ -6,30 +6,32 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 import FileDrop from 'react-file-drop';
+import { connect } from "react-redux";
+import AppActions from '../../constant/AppActions';
 
 class PostProperty extends Component{
 
     validViews = [1];
     state = {
         currentViewIndex : 1,
-        country: '',
-        street: '',
-        unit: '',
-        city: '',
-        state: '',
-        zip: '',
-        headline :'',
-        description: '',
-        type: 'Apartment',
-        bedrooms: '',
-        bathroom: '',
-        guests: '',
-        bookingOption: 'instant',
-        singleNightRate: '',
-        minStay: '',
-        startDate: null,
-        endDate: null,
-        propertyPictures : [],
+        // country: '',
+        // street: '',
+        // unit: '',
+        // city: '',
+        // state: '',
+        // zip: '',
+        // headline :'',
+        // description: '',
+        // type: 'Apartment',
+        // bedrooms: '',
+        // bathroom: '',
+        // guests: '',
+        // bookingOption: 'instant',
+        // singleNightRate: '',
+        // minStay: '',
+        // startDate: null,
+        // endDate: null,
+        // propertyPictures : [],
     }
 
     constructor(props){
@@ -73,7 +75,7 @@ class PostProperty extends Component{
     }
 
     isDetailViewValid(index){
-       return this.validViews.indexOf(index) > -1
+       return this.validViews.indexOf(index) > -1;
     }
 
     updateCurrentView(event, from){    
@@ -120,7 +122,7 @@ class PostProperty extends Component{
     }
 
     onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
+        this.props.dispatch({ type: AppActions.POST_PROPERTY_INPUT_CHANGE , payload : {[event.target.name]: event.target.value} });
     }
 
     renderPager(){
@@ -145,28 +147,28 @@ class PostProperty extends Component{
                 <form onSubmit={this.updateCurrentView.bind(this)}>
                     <div class="form-group-md">
                         <label>Country<span> *</span></label>
-                        <input type="text" required class="form-control" onChange={this.onChange} name="country" value={this.state.country} placeholder="Country"/>
+                        <input type="text" required class="form-control" onChange={this.onChange} name="country" value={this.props.country} placeholder="Country"/>
                     </div>
                     <div class="form-group-md">
                         <label>Street Address<span> *</span></label>
-                        <input type="text" required class="form-control" onChange={this.onChange} name="street" value={this.state.street} placeholder="Street Address"/>
+                        <input type="text" required class="form-control" onChange={this.onChange} name="street" value={this.props.street} placeholder="Street Address"/>
                     </div>
                     <div class="form-group-md">
                         <label>Unit, Suite, Building, etc<span> *</span></label>
-                        <input type="text" required class="form-control" onChange={this.onChange} name="unit" value={this.state.unit} placeholder="Unit, Suite, Building, etc"/>
+                        <input type="text" required class="form-control" onChange={this.onChange} name="unit" value={this.props.unit} placeholder="Unit, Suite, Building, etc"/>
                     </div>
                     <div class="form-group-md">
                         <label>City<span> *</span></label>
-                        <input type="text" required class="form-control" onChange={this.onChange} name="city" value={this.state.city} placeholder="City"/>
+                        <input type="text" required class="form-control" onChange={this.onChange} name="city" value={this.props.city} placeholder="City"/>
                     </div>
                     <div class="horizontal-group">
                         <div class="form-group-md">
                             <label>State<span> *</span></label>
-                            <input type="text" required class="form-control" onChange={this.onChange} name="state" value={this.state.state} placeholder="State"/>
+                            <input type="text" required class="form-control" onChange={this.onChange} name="state" value={this.props.state} placeholder="State"/>
                         </div>
                         <div class="form-group-md">
                             <label>Zipcode<span> *</span></label>
-                            <input type="text" required pattern='^\d{5}(?:[-\s]\d{4})?$' class="form-control" onChange={this.onChange} name="zip" value={this.state.zip} placeholder="XXXXX"/>
+                            <input type="text" required pattern='^\d{5}(?:[-\s]\d{4})?$' class="form-control" onChange={this.onChange} name="zip" value={this.props.zip} placeholder="XXXXX"/>
                         </div>
                     </div>
                     <hr/>
@@ -187,16 +189,16 @@ class PostProperty extends Component{
                 <form onSubmit={this.updateCurrentView.bind(this)}>
                     <div class="form-group-md">
                         <label>Headline <span> *</span></label>
-                        <input type="text" required class="form-control" maxlength="80" onChange={this.onChange} name="headline" value={this.state.headline}  placeholder="Headline"/>
+                        <input type="text" required class="form-control" maxlength="80" onChange={this.onChange} name="headline" value={this.props.headline}  placeholder="Headline"/>
                     </div>
                     <div class="form-group-md">
                         <label>Property description <span> *</span></label>
-                        <textarea rows="4" cols="50" required maxlength="10000" class="form-control" onChange={this.onChange} name="description" value={this.state.description} placeholder="Property description"></textarea>
+                        <textarea rows="4" cols="50" required maxlength="10000" class="form-control" onChange={this.onChange} name="description" value={this.props.description} placeholder="Property description"></textarea>
                     </div>
                     <div class="horizontal-group">
                         <div class="form-group-md">
                             <label>Property Type <span> *</span></label>
-                            <select class="form-control" name="type" value={this.state.type} onChange={this.onChange}>
+                            <select class="form-control" name="type" value={this.props.type} onChange={this.onChange}>
                                 <option value="Apartment">Apartment</option>
                                 <option value="Villa">Villa</option>
                                 <option value="Resort">Resort</option>
@@ -207,17 +209,17 @@ class PostProperty extends Component{
                         </div>
                         <div class="form-group-md">
                             <label>Accommodates <span> *</span></label>
-                            <input type="number" required min="1" class="form-control" onChange={this.onChange} name="guests" value={this.state.guests}  placeholder="Accommodates"/>
+                            <input type="number" required min="1" class="form-control" onChange={this.onChange} name="guests" value={this.props.guests}  placeholder="Accommodates"/>
                         </div>
                     </div>
                     <div class="horizontal-group">
                         <div class="form-group-md">
                             <label>Bedrooms <span> *</span></label>
-                            <input type="number" required min="1" class="form-control" onChange={this.onChange} name="bedrooms" value={this.state.bedrooms}  placeholder="Bedrooms"/>
+                            <input type="number" required min="1" class="form-control" onChange={this.onChange} name="bedrooms" value={this.props.bedrooms}  placeholder="Bedrooms"/>
                         </div>
                         <div class="form-group-md">
                             <label>Bathrooms <span> *</span></label>
-                            <input type="number" required min="1" class="form-control" onChange={this.onChange} name="bathroom" value={this.state.bathroom}  placeholder="Bathrooms"/>
+                            <input type="number" required min="1" class="form-control" onChange={this.onChange} name="bathroom" value={this.props.bathroom}  placeholder="Bathrooms"/>
                         </div>
                     </div>
                     <hr/>
@@ -239,14 +241,14 @@ class PostProperty extends Component{
                 <hr/>
                 <form onSubmit={this.updateCurrentView.bind(this)}>
                     <div class="form-group-md">
-                        <h4><input type="radio" name="bookingOption" value="instant" onChange={this.onChange} checked={this.state.bookingOption === 'instant'}/> Instant Booking</h4>
+                        <h4><input type="radio" name="bookingOption" value="instant" onChange={this.onChange} checked={this.props.bookingOption === 'instant'}/> Instant Booking</h4>
                         <p>
                             Automatically accept booking requests from all travelers for dates you have available, 
                             and add the bookings to your calendar.
                         </p>
                     </div>
                     <div class="form-group-md">
-                        <h4><input type="radio" name="bookingOption" value="24hour" onChange={this.onChange} checked={this.state.bookingOption === '24hour'}/> 24-hour review</h4>
+                        <h4><input type="radio" name="bookingOption" value="24hour" onChange={this.onChange} checked={this.props.bookingOption === '24hour'}/> 24-hour review</h4>
                         <p>
                             Allow 24 hours to communicate with guests and accept booking requests.
                         </p>
@@ -321,8 +323,10 @@ class PostProperty extends Component{
 
     showUploadImages(){
         let images = []
-        if(this.state.propertyPictures.length > 0){
-            this.state.propertyPictures.map((img, i)=>{
+        console.log(this.props.propertyPictures);
+        
+        if(this.props.propertyPictures && this.props.propertyPictures.length > 0){
+            this.props.propertyPictures.map((img, i)=>{
                 images.push(
                     <img index={i} src={img} height="100" width="200"/>
                 );
@@ -332,8 +336,8 @@ class PostProperty extends Component{
     }
 
     checkPhotoValidation(event){
-        console.log(this.state.propertyPictures.length);
-        if(2 <= this.state.propertyPictures.length){
+        console.log(this.props.propertyPictures.length);
+        if(2 <= this.props.propertyPictures.length){
             this.updateCurrentView(event);
         }
         else{
@@ -356,11 +360,11 @@ class PostProperty extends Component{
                     <div class="horizontal-group">
                         <div class="form-group-md">
                             <label>Blocked From <span> *</span></label>
-                            <input type="date" required class="form-control" name="startDate" value={this.state.startDate} onChange={this.onChange} placeholder="Blocked From"/>
+                            <input type="date" required class="form-control" name="startDate" value={this.props.startDate} onChange={this.onChange} placeholder="Blocked From"/>
                         </div>
                         <div class="form-group-md">
                             <label>Blocked Till <span> *</span></label>
-                            <input type="date"  required class="form-control" name="endDate" value={this.state.endDate} onChange={this.onChange} placeholder="Nights"/>
+                            <input type="date"  required class="form-control" name="endDate" value={this.props.endDate} onChange={this.onChange} placeholder="Nights"/>
                         </div>
                     </div>
                     <hr/>
@@ -417,4 +421,12 @@ class PostProperty extends Component{
     }
 
 }
-export default PostProperty;
+
+function mapStateToProps(reduxState) {
+    const { country, street, unit, city, state, zip, headline, description, type, bedrooms, bathroom, guests,
+        bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures, message, loading  } = reduxState;
+    return { country, street, unit, city, state, zip, headline, description, type, bedrooms, bathroom, guests,
+        bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures, message, loading };
+}
+
+export default connect(mapStateToProps)(PostProperty);
