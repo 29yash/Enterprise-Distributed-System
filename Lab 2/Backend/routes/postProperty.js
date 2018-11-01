@@ -1,16 +1,20 @@
 var express = require("express");
 var router = express.Router();
-var getConnectionFromPool = require('../database');
 var uploadPhoto = require('./uploadImage');
+var kafka = require('../kafka/client');
 
-router.post("/postProperty/uploadPhoto", uploadPhoto.single('propertyPicture'), function(req,res){
+
+router.post("/postProperty/uploadPhoto", uploadPhoto.any(), function(req,res){
     let response = {};
-    console.log(req.file);
-    if(req.file){
-        let photoUrl = "http://localhost:8080/photos/" + req.file.filename;
+    let photoURLS = [];
+    if(req.files.length > 0){
+        console.log(req.files);
+        req.files.map((file)=>{
+            photoURLS.push("http://localhost:8080/photos/" + file.filename);
+        });
         response['success'] = true;
         response['message'] = "Image uploaded successfully";
-        response['url'] = photoUrl;
+        response['urls'] = photoURLS;
         res.status(200).send(response);
     }
     else{
@@ -57,62 +61,23 @@ var validateRequest = function (req, res, next) {
 
 router.post("/postProperty", validateRequest, function(req,res){
     let response = {};
-    getConnectionFromPool((err, connection)=>{
-        if(err){
+    kafka.make_request('homeaway_post_property', 'homeaway_post_property_response' ,{username: req.user.user_email, ...req.body}, function(error,result){
+        console.log('In homeaway_post_property');
+        console.log(result);
+        if (error){
+            console.log("Inside Post Property Kafka Response Error", error);
             response['success'] = false ;
             response['message'] = 'Internal Server Error';
-            res.status(500).send(response); 
-            throw err; 
+            res.status(500).send(response);
         }
         else{
-            let username = req.cookies['HomeawayAuth']['user_email'];
-            let insertProperty = 'INSERT INTO properties VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
-            let blockDateQuery = 'INSERT INTO propertyblockdates(propertyId, startDate, endDate) VALUES (?,?,?)';
-            let insertQueryValues = [null, username, req.body.street, req.body.unit, req.body.city, 
-                req.body.state, req.body.zip, req.body.country, req.body.headline, req.body.description,
-                req.body.type, req.body.bedrooms, req.body.bathroom, req.body.guests, req.body.bookingOption, 
-                req.body.singleNightRate, req.body.minStay, JSON.stringify(req.body.propertyPictures)];
-
-            connection.query(insertProperty, insertQueryValues, function(err, result){
-                if(err){
-                    console.log(err);
-                    response['success'] = false ;
-                    response['message'] = 'Internal Server Error';
-                    res.status(500).send(response); 
-                }
-                else{
-                    if(result.affectedRows > 0){
-                        connection.query(blockDateQuery, [result.insertId, req.body.startDate, req.body.endDate], function(err, blockDateResult){
-                            if(err){
-                                console.log(err);
-                                response['success'] = false ;
-                                response['message'] = 'Internal Server Error';
-                                res.status(500).send(response); 
-                            }
-                            else{
-                                if(blockDateResult.affectedRows > 0){
-                                    response['success'] = true;
-                                    response['propertyID'] = result.insertId;
-                                    response['message'] = "Property Posted successfully";
-                                    res.status(200).send(response);
-                                }
-                                else{
-                                    response['success'] = false;
-                                    response['message'] = "Unable to Block Dates now. Please try again later !";
-                                    res.status(200).send(response);
-                                }
-                            }
-                        });
-                    }
-                    else{
-                        response['success'] = false;
-                        response['message'] = "Unable to Post Property. Please try again later !";
-                        res.status(200).send(response);
-                    }
-                }
-            });
+            console.log("Inside Post Property Kafka Response");
+            console.log(result);
+            response['success'] = true;
+            response ['property'] = result;
+            response['message'] = "Property Posted successfully";
+            res.status(200).send(response);
         }
-        connection.release();
     });
 });
 module.exports = router;

@@ -78,7 +78,7 @@ export default class WebService extends AxiosService{
     */
 
     logout(success, failure = null) {
-        this.webServicePostCall(URI.LOGOUT, null, success, failure, true);
+        this.deleteCall(URI.LOGOUT, null, success, failure, true);
     }
 
     /**

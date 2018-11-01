@@ -9,6 +9,8 @@ import cookie from 'react-cookies';
 import {Link} from 'react-router-dom';
 import profile from '../../images/default-profile-pic.png';
 import axios from 'axios';
+import AppConstants from '../../constant/AppConstants';
+import { userLogout } from '../../actions/actions_logout';
 
 class Navbar extends Component{
 
@@ -19,28 +21,18 @@ class Navbar extends Component{
     }
 
     componentWillMount(){
-        if(cookie.load('HomeawayAuth')){
-            this.userData = JSON.parse(cookie.load('HomeawayAuth').substring(2));
+        if(localStorage.getItem(AppConstants.USER_DETAILS)){
+            this.userData = JSON.parse(localStorage.getItem(AppConstants.USER_DETAILS));
         }
     }
 
     logout(){
-        axios.delete('http://localhost:8080/logout', {withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                this.props.history.push('/');
-            }
-        })
-        .catch((error) =>{
-            this.props.history.push('/');
-            this.setState({loginFailed:true});
-            console.log(error); 
-        });
+        userLogout();
     }
 
     renderUser(){
-        if(cookie.load('HomeawayAuth')){
-            let profilePicture = this.userData.user_profile_picture ? this.userData.user_profile_picture : profile;
+        if(localStorage.getItem(AppConstants.AUTH_TOKEN)){
+            let profilePicture = this.userData.user_pic_url ? this.userData.user_pic_url : profile;
             return(
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" className={this.props.theme === 'light' ? 'blue-link-text' : 'white-link-text'} role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

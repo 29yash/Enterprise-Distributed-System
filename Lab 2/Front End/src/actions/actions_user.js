@@ -44,14 +44,14 @@ export function uploadUserProfilePicture(profilePicture){
         WebService.getInstance().uploadUserProfilePhoto(profilePicture, (response)=>{
             if (response.success) {
                 console.log(response);
-                dispatch(uploadUserProfileSuccess(response.url));
+                dispatch(uploadUserProfilePictureSuccess(response.user_pic_url));
             }
             else{
-                dispatch(uploadUserProfileFailure(response.message));
+                dispatch(uploadUserProfilePictureFailure(response.message));
             }
         },(error)=>{
             console.log(error);
-            dispatch(uploadUserProfileFailure(error));
+            dispatch(uploadUserProfilePictureFailure(error));
         })
     }
 }
@@ -86,12 +86,12 @@ const updateUserProfileloading = () => ({
     payload:true
 });
 
-const uploadUserProfileSuccess = (profilePicture) => ({
+const uploadUserProfilePictureSuccess = (profilePicture) => ({
     type: AppActions.USER_PROFILE_PICTURE_UPLOAD_SUCCESS,
-    payload:profilePicture
+    payload:{user_pic_url:profilePicture}
 });
 
-const uploadUserProfileFailure = (error) => ({
+const uploadUserProfilePictureFailure = (error) => ({
     type: AppActions.USER_PROFILE_PICTURE_UPLOAD_FAILURE,
     payload:error
 });

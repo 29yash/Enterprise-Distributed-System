@@ -11,6 +11,14 @@ const AppActions = {
     USER_PROFILE_UPDATE: "user_profie_update",
     USER_PROFILE_PICTURE_UPLOAD_SUCCESS: "user_profie_picture_upload_sucess",
     USER_PROFILE_PICTURE_UPLOAD_FAILURE: "user_profie_picture_upload_failure",
-    POST_PROPERTY_INPUT_CHANGE: "post_property_input_change"
+    POST_PROPERTY_INPUT_CHANGE: "post_property_input_change",
+    POST_PROPERTY_UPLOAD_PICTURE_SUCCESS: "post_property_upload_picture_success",
+    POST_PROPERTY_UPLOAD_PICTURE_FAILURE: "post_property_upload_picture_failure",
+    POST_PROPERTY_SUCCESS: "post_property_success",
+    POST_PROPERTY_FAILURE: "post_property_failure",
+    LOGOUT_REDUX_RESET : "logout_redux_reset",
+    SEARCH_PROPERTY_SUCCESS : "search_property_success",
+    SEARCH_PROPERTY_FAILURE : "search_property_failure",
+    SEARCH_PROPERTY_INPUT_CHANGE : "search_property_input_change",
 }
 export default AppActions;

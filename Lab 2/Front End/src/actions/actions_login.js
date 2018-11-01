@@ -6,8 +6,10 @@ import AppActions from "../constant/AppActions";
 export function userLogin(values){   
     return (dispatch) => WebService.getInstance().login(values, (response)=>{
         console.log(response);
+        localStorage.setItem(AppConstants.USER_DETAILS, JSON.stringify(response.user));
+        localStorage.setItem(AppConstants.AUTH_TOKEN, JSON.stringify(response.token));
         dispatch(loginSuccess(response));
-       values.role === AppConstants.USER_ROLE_OWNER ? history.push('/dashboard') : history.push('/');
+        values.role === AppConstants.USER_ROLE_OWNER ? history.push('/dashboard') : history.push('/');
     },(error)=>{
         console.log(error);
         dispatch(loginFailure(error));

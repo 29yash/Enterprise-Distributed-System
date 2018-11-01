@@ -19,6 +19,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     propertyPictures : [],
+    errorMessage : null
 };
 
 export default function(state = initialState, action) { 
@@ -27,6 +28,16 @@ export default function(state = initialState, action) {
             return{
                 ...state, ...action.payload
             }
+        case AppActions.POST_PROPERTY_UPLOAD_PICTURE_SUCCESS:
+            let propertyPictures = state.propertyPictures.concat(action.payload);
+            propertyPictures.push()
+            return{
+                ...state, propertyPictures
+            }
+        case AppActions.POST_PROPERTY_SUCCESS:
+            return initialState;
+        case AppActions.POST_PROPERTY_FAILURE:
+            return { ...state, errorMessage:action.payload};
         default:
          return state;
     }

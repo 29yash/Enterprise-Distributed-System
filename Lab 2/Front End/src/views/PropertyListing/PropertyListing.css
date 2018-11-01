@@ -21,6 +21,10 @@
     margin-right: 10px;
 }
 
+.list-property form {
+    text-align: center
+}
+
 .list-property form button{
     margin-left: 25px;
     border-radius: 25px;

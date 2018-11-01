@@ -5,44 +5,29 @@ import cookie from 'react-cookies';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
+import AppConstants from '../../constant/AppConstants';
+import {inputChange, searchProperty} from '../../actions/actions_search_property';
+import { connect } from "react-redux";
 
 class PropertyListing extends Component{
-
-    state = {
-        location: null,
-        arrivalDate: null,
-        departureDate:null,
-        guests:null,
-        showError:false,
-        error:null,
-        properties: [],
-    }
 
     constructor(props){
         super(props);
     }
 
     onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value , showError:false });
+        this.props.inputChange({[event.target.name]: event.target.value});
     }
 
     componentDidMount(){
-        let { location, arrivalDate, departureDate, guests } = this.props.location.state.searchData;
-        let properties = this.props.location.state.properties;
-        this.setState({
-            location,
-            arrivalDate,
-            departureDate,
-            guests,
-            properties
-        });
+        
     }
 
     renderError(){
-        if(this.state.showError){
+        if(this.props.showError){
             return(
                 <div class="alert alert-danger" role="alert">
-                    {this.state.error}
+                    {this.props.error}
                 </div>
             );
         }
@@ -51,7 +36,7 @@ class PropertyListing extends Component{
 
     render(){
         let redirectVar = null;
-        if(!cookie.load('HomeawayAuth')){
+        if(!localStorage.getItem(AppConstants.AUTH_TOKEN)){
             redirectVar = <Redirect to= "/"/>
         }
         return(
@@ -62,19 +47,33 @@ class PropertyListing extends Component{
                     <form class="form-inline" onSubmit={this.searchProperty.bind(this)}>
                         <div class="form-group">
                             <label>Where</label>
-                            <input type="text" class="form-control" name="location" onChange={this.onChange} value={this.state.location} placeholder="Where" required/>
+                            <input type="text" class="form-control" name="location" onChange={this.onChange} value={this.props.location} placeholder="Where" required/>
                         </div>
                         <div class="form-group">
                             <label>Arrival</label>
-                            <input type="date" class="form-control" name="arrivalDate" onChange={this.onChange} value={this.state.arrivalDate} placeholder="Arrival" required/>
+                            <input type="date" class="form-control" name="arrivalDate" onChange={this.onChange} value={this.props.arrivalDate} placeholder="Arrival" required/>
                         </div>
                         <div class="form-group">
                             <label>Depart</label>
-                            <input type="date" class="form-control" name="departureDate" onChange={this.onChange} value={this.state.departureDate} placeholder="Depart" required/>
+                            <input type="date" class="form-control" name="departureDate" onChange={this.onChange} value={this.props.departureDate} placeholder="Depart" required/>
                         </div>
                         <div class="form-group">
                             <label>Guests</label>
-                            <input type="number" min="1" class="form-control" name="guests" onChange={this.onChange} value={this.state.guests} placeholder="Guests" required/>
+                            <input type="number" min="1" class="form-control" name="guests" onChange={this.onChange} value={this.props.guests} placeholder="Guests" required/>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="form-group">
+                            <label>Min Price</label>
+                            <input type="number" min="1" class="form-control" name="minPrice" onChange={this.onChange} value={this.props.minPrice} placeholder="Min Price" />
+                        </div>
+                        <div class="form-group">
+                            <label>Max Price</label>
+                            <input type="number" min="1" class="form-control" name="maxPrice" onChange={this.onChange} value={this.props.maxPrice} placeholder="Max Price"/>
+                        </div>
+                        <div class="form-group">
+                            <label>No. Of Bedrooms</label>
+                            <input type="number" min="1" class="form-control" name="noOfBedrooms" onChange={this.onChange} value={this.props.noOfBedrooms} placeholder="No. Of Bedrooms" />
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg">Search</button>
                     </form>
@@ -90,8 +89,8 @@ class PropertyListing extends Component{
 
     renderProperties(){
         let views = [];
-        if(this.state.properties.length > 0){
-            this.state.properties.map((property, index)=>{
+        if(this.props.properties.length > 0){
+            this.props.properties.map((property, index)=>{
                 console.log(property, index);
                 views.push(this.renderPropertyItem(property,index));
             });
@@ -108,7 +107,7 @@ class PropertyListing extends Component{
 
     showProperty(property){
         console.log(property);
-        let { location, arrivalDate, departureDate, guests } = this.state;
+        let { location, arrivalDate, departureDate, guests } = this.props;
         this.props.history.push({pathname :'/viewProperty',  state: {property, location, arrivalDate, departureDate, guests} });
     }
 
@@ -138,11 +137,11 @@ class PropertyListing extends Component{
     }
 
     renderPhotoCrousel(property, index){
-        let pictures = JSON.parse(property.propertyPictures);        
+        // let pictures = JSON.parse(property.propertyPictures);        
         return(
-            <div id={index + '-crousel'} class="carousel slide" data-ride="carousel">
+            <div id={index + '-crousel'} class="carousel slide" data-ride="carousel" onClick={(event)=>{event.stopPropagation();}}>
                 <div class="carousel-inner">
-                    {this.renderImageSlides(pictures)}
+                    {this.renderImageSlides(property.propertyPictures)}
                 </div>
                 <a class="carousel-control left" href={"#" + index + '-crousel'} data-slide="prev">
                     <span class="glyphicon glyphicon-chevron-left"></span>
@@ -169,25 +168,14 @@ class PropertyListing extends Component{
 
     searchProperty(event){
         event.preventDefault();
-        const { location, arrivalDate, departureDate, guests } = this.state;
-        axios.post('http://localhost:8080/searchProperty', {location, arrivalDate, departureDate, guests}, {withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                this.setState({properties : response.data.properties});
-            }
-            else{
-                this.setState({showError:true, error:response.data.message})
-            }
-        })
-        .catch((error) =>{
-            console.log(error);
-            if(error.response.status == 401){
-                this.props.history.push('/');
-            }
-            else{
-                this.setState({showError:true, error: error.message});
-            }
-        });
+        const { location, arrivalDate, departureDate, guests, maxPrice, minPrice, noOfBedrooms } = this.props;
+        this.props.searchProperty({ location, arrivalDate, departureDate, guests, maxPrice, minPrice, noOfBedrooms });
     }
 }
-export default PropertyListing;
+
+function mapStateToProps(reduxState) {
+    console.log(reduxState);
+    const {location, arrivalDate, departureDate, guests, properties, maxPrice, minPrice, noOfBedrooms} = reduxState.searchProperty;
+    return {location, arrivalDate, departureDate, guests, properties, maxPrice, minPrice, noOfBedrooms};
+}
+export default connect(mapStateToProps, {inputChange, searchProperty})(PropertyListing);

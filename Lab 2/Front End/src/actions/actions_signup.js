@@ -2,13 +2,14 @@ import WebService from "../services/WebService";
 import { history } from "../router/history";
 import AppConstants from "../constant/AppConstants";
 import AppActions from "../constant/AppActions";
+import { userLogin } from "./actions_login";
 
 export function userSignup(values){   
     return (dispatch) => WebService.getInstance().signUp(values, (response)=>{
         console.log(response);
         if(response.success){
             dispatch(signupSuccess(response));
-            values.role === AppConstants.USER_ROLE_OWNER ? history.push('/dashboard') : history.push('/');
+            dispatch(userLogin({username: values.email, password:values.password}));
         }
         else{
             dispatch(signupFailure(response.message));

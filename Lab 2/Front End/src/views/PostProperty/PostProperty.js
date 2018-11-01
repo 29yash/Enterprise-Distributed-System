@@ -1,37 +1,19 @@
 import React, {Component} from 'react';
 import './PostProperty.css';
 import {Redirect} from 'react-router';
-import cookie from 'react-cookies';
-import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 import FileDrop from 'react-file-drop';
 import { connect } from "react-redux";
 import AppActions from '../../constant/AppActions';
+import AppConstants from '../../constant/AppConstants';
+import {postPropertyPicture, inputChange, postProperty} from '../../actions/actions_post_property';
 
 class PostProperty extends Component{
 
     validViews = [1];
     state = {
         currentViewIndex : 1,
-        // country: '',
-        // street: '',
-        // unit: '',
-        // city: '',
-        // state: '',
-        // zip: '',
-        // headline :'',
-        // description: '',
-        // type: 'Apartment',
-        // bedrooms: '',
-        // bathroom: '',
-        // guests: '',
-        // bookingOption: 'instant',
-        // singleNightRate: '',
-        // minStay: '',
-        // startDate: null,
-        // endDate: null,
-        // propertyPictures : [],
     }
 
     constructor(props){
@@ -40,7 +22,7 @@ class PostProperty extends Component{
 
     render(){
         let redirectVar = null;
-        if(!cookie.load('HomeawayAuth')){
+        if(!localStorage.getItem(AppConstants.AUTH_TOKEN)){
             redirectVar = <Redirect to= "/"/>
         }
         return(
@@ -59,6 +41,7 @@ class PostProperty extends Component{
                         </ul>
                     </div>
                     <div class="col-lg-9 detail">
+                        {this.renderError()}
                         <div class="panel-container">
                             {this.getCurrentDetailView()}
                         </div>
@@ -66,6 +49,16 @@ class PostProperty extends Component{
                 </div>
             </div>
         );
+    }
+
+    renderError(){
+        if(this.props.erroMessage){
+            return(
+                <div class="alert alert-danger" role="alert">
+                    {this.props.errorMessage}
+                </div>
+            );
+        }
     }
 
     setCurrentViewIndex(index){
@@ -122,7 +115,7 @@ class PostProperty extends Component{
     }
 
     onChange = (event) => {
-        this.props.dispatch({ type: AppActions.POST_PROPERTY_INPUT_CHANGE , payload : {[event.target.name]: event.target.value} });
+        this.props.inputChange({[event.target.name]: event.target.value});
     }
 
     renderPager(){
@@ -272,11 +265,11 @@ class PostProperty extends Component{
                 <form onSubmit={this.checkPhotoValidation.bind(this)}>
                     <div class="file-drop-container">
                         <FileDrop onDrop={this.handleDropFile}>
-                            <h3>Drop photo here (One at a time)</h3>
+                            <h3>Drop photos here</h3>
                             <h3>or</h3>
                             <div class = "selectButton">
                                 <label for="propertyPicture">SELECT PHOTOS TO UPLOAD</label>
-                                <input type='file' id="propertyPicture" name="propertyPicture" onChange={this.handleSelectFile} accept=".png, .jpg, .jpeg" />
+                                <input type='file' id="propertyPicture" name="propertyPicture" onChange={this.handleSelectFile} accept=".png, .jpg, .jpeg" multiple/>
                             </div>
                         </FileDrop>
                         <div class='upload-images'>
@@ -291,34 +284,25 @@ class PostProperty extends Component{
     }
 
     handleDropFile = (files) => {
-        this.uploadPropertyPicture(files[0]);
+        this.uploadPropertyPicture(files);
     }
 
     handleSelectFile = (event) => {
-        this.uploadPropertyPicture(event.target.files[0]);
+        this.uploadPropertyPicture(event.target.files);
     }    
 
-    uploadPropertyPicture(propertyPicture){
-        if(this.state.propertyPictures.length < 6){
+    uploadPropertyPicture(propertyPictures){ 
+        if(((this.props.propertyPictures.length) + (propertyPictures.length)) < 6){
             let formData = new FormData();
-            formData.append('propertyPicture', propertyPicture);
-            axios.post('http://localhost:8080/postProperty/uploadPhoto', formData, {withCredentials: true})
-            .then((response) => {
-                if(response.data.success){
-                    let propertyPics = this.state.propertyPictures;
-                    propertyPics.push(response.data.url);
-                    this.setState({propertyPictures:propertyPics});
-                }
-                else{
-                    console.log(response.data.message);
-                    // this.setState({isAckPositive:false, ackMessage : response.data.message})
-                }
-            })
-            .catch((error) =>{
-                console.log(error);
-                // this.setState({isAckPositive:false, ackMessage : error})
-            });
+            for (let index = 0; index < propertyPictures.length; index++) {
+                formData.append('propertyPicture' + index, propertyPictures[index]);
+            }
+            this.props.postPropertyPicture(formData);
         }
+        else{
+            alert('You can post upto 5 Property Pictures');
+        }
+
     }
 
     showUploadImages(){
@@ -341,6 +325,7 @@ class PostProperty extends Component{
             this.updateCurrentView(event);
         }
         else{
+            alert("Please upload atleast 2 pictures");
             event.preventDefault();
         }
     }
@@ -360,11 +345,11 @@ class PostProperty extends Component{
                     <div class="horizontal-group">
                         <div class="form-group-md">
                             <label>Blocked From <span> *</span></label>
-                            <input type="date" required class="form-control" name="startDate" value={this.props.startDate} onChange={this.onChange} placeholder="Blocked From"/>
+                            <input type="date" required class="form-control" name="startDate" value={this.props.startDate} onChange={this.onChange} max={this.props.endDate} placeholder="Blocked From"/>
                         </div>
                         <div class="form-group-md">
                             <label>Blocked Till <span> *</span></label>
-                            <input type="date"  required class="form-control" name="endDate" value={this.props.endDate} onChange={this.onChange} placeholder="Nights"/>
+                            <input type="date"  required class="form-control" name="endDate" value={this.props.endDate} onChange={this.onChange} min={this.props.startDate} placeholder="Nights"/>
                         </div>
                     </div>
                     <hr/>
@@ -401,32 +386,21 @@ class PostProperty extends Component{
 
     postProperty(){
         const { country, street, unit, city, state, zip, headline, description, type, bedrooms, bathroom, guests,
-            bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures } = this.state;
-
-        axios.post('http://localhost:8080/postProperty', {country, street, unit, city, state, zip, 
-        headline, description, type, bedrooms, bathroom, guests,bookingOption, singleNightRate, minStay, startDate, 
-        endDate, propertyPictures}, {withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                // this.setState({isAckPositive:true, ackMessage : response.data.message});
-                this.props.history.push('/dashboard');
-            }
-            else{
-                this.setState({isAckPositive:false, ackMessage : response.data.message})
-            }
-        })
-        .catch((error) =>{
-            console.log(error); 
-        });
+            bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures } = this.props;
+            
+        this.props.postProperty({country, street, unit, city, state, zip, headline, description, type, bedrooms, 
+            bathroom, guests,bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures});
     }
 
 }
 
 function mapStateToProps(reduxState) {
+    console.log(reduxState);
+    
     const { country, street, unit, city, state, zip, headline, description, type, bedrooms, bathroom, guests,
-        bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures, message, loading  } = reduxState;
+        bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures, message, loading  } = reduxState.postProperty;
     return { country, street, unit, city, state, zip, headline, description, type, bedrooms, bathroom, guests,
         bookingOption, singleNightRate, minStay, startDate, endDate, propertyPictures, message, loading };
 }
 
-export default connect(mapStateToProps)(PostProperty);
+export default connect(mapStateToProps, {postPropertyPicture, inputChange, postProperty})(PostProperty);

@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import './Dashboard.css';
 import {Redirect} from 'react-router';
-import cookie from 'react-cookies';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
+import AppConstants from '../../constant/AppConstants';
 
 class Dashboard extends Component{
 
@@ -17,24 +15,24 @@ class Dashboard extends Component{
     }
 
     componentDidMount(){
-        axios.get('http://localhost:8080/bookingHistory',{withCredentials : true})
-            .then((response) => {
-                if(response.data.success){
-                    console.log(response.data.bookings);
-                    this.setState({bookings: response.data.bookings});
-                }
-            })
-            .catch((error) =>{
-                console.log(error);
-                if(error.response.status == 401){
-                    this.props.history.push('/');
-                }
-            });
+        // axios.get('http://localhost:8080/bookingHistory',{withCredentials : true})
+        //     .then((response) => {
+        //         if(response.data.success){
+        //             console.log(response.data.bookings);
+        //             this.setState({bookings: response.data.bookings});
+        //         }
+        //     })
+        //     .catch((error) =>{
+        //         console.log(error);
+        //         if(error.response.status == 401){
+        //             this.props.history.push('/');
+        //         }
+        //     });
     }
 
     render(){        
         let redirectVar = null;
-        if(!cookie.load('HomeawayAuth')){
+        if(!localStorage.getItem(AppConstants.AUTH_TOKEN)){
             redirectVar = <Redirect to= "/"/>
         }
         return(

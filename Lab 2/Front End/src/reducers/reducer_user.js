@@ -42,7 +42,7 @@ export default function(state = initialState, action) {
     case AppActions.USER_PROFILE_PICTURE_UPLOAD_SUCCESS:
       return {
         ...state,
-        userProfile : {...state.userProfile, pic_url:action.payload},
+        userProfile : {...state.userProfile, ...action.payload},
         message: null
       };
     case AppActions.USER_PROFILE_PICTURE_UPLOAD_FAILURE:

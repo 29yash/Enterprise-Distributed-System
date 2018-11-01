@@ -8,6 +8,7 @@ import Navbar from '../Navbar/Navbar';
 import profile from '../../images/default-profile-pic.png';
 import { connect } from "react-redux";
 import {fetchUserProfile, updateUserProfile, uploadUserProfilePicture} from '../../actions/actions_user';
+import AppConstants from '../../constant/AppConstants';
 var Loader = require('react-loader');
 
 class EditProfile extends Component {
@@ -82,7 +83,7 @@ class EditProfile extends Component {
 
 
     renderProfilePicture() {
-        let profilePicture = this.state.userProfile.pic_url ? this.state.userProfile.pic_url : profile;
+        let profilePicture = this.state.userProfile.user_pic_url ? this.state.userProfile.user_pic_url : profile;
         return (
             <div class="avatar-upload">
                 <div class="avatar-edit">
@@ -101,7 +102,7 @@ class EditProfile extends Component {
 
     render() {
         let redirectVar = null;
-        if (!cookie.load('HomeawayAuth')) {
+        if (!localStorage.getItem(AppConstants.AUTH_TOKEN)) {
             redirectVar = <Redirect to="/" />
         }
 

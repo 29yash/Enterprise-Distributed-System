@@ -5,6 +5,7 @@ import cookie from 'react-cookies';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
+import AppConstants from '../../constant/AppConstants';
 
 class ViewProperty extends Component{
  
@@ -47,7 +48,7 @@ class ViewProperty extends Component{
     render(){        
         let redirectVar = null;
         let totalPrice = parseInt(this.state.guests) * parseInt(this.state.property.singleNightRate)
-        if(!cookie.load('HomeawayAuth')){
+        if(!localStorage.getItem(AppConstants.AUTH_TOKEN)){
             redirectVar = <Redirect to= "/"/>
         }
         return(
@@ -128,11 +129,11 @@ class ViewProperty extends Component{
     }
 
     renderCrousel(){
-        let pictures = JSON.parse(this.state.property.propertyPictures);        
+        // let pictures = JSON.parse(this.state.property.propertyPictures);        
         return(
             <div id='property-crousel' class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
-                    {this.renderImageSlides(pictures)}
+                    {this.renderImageSlides(this.state.property.propertyPictures)}
                 </div>
                 <a class="carousel-control left" href="#property-crousel" data-slide="prev">
                     <span class="glyphicon glyphicon-chevron-left"></span>

@@ -15,8 +15,8 @@ const UserSchema = new Schema({
     user_company: {type: String,  default: ''},
     user_school: {type: String,  default: ''},
     user_hometown:{type: String,  default: ''},
-    user_role:{type: String},
-    user_pic_url:{type: String},
+    user_role:{type: String, default: null},
+    user_pic_url:{type: String, default: null},
 });
 
 // UserSchema.plugin(uniqueValidator)

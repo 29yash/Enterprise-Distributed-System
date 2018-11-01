@@ -7,11 +7,11 @@ var cors = require('cors');
 var passport = require('passport');
 var SignupRouter = require('./routes/signup');
 var LoginRouter = require('./routes/login');
-// var LogoutRouter = require('./routes/logout');
+var LogoutRouter = require('./routes/logout');
 var UserProfileRouter = require('./routes/userProfile');
 // var BookingRouter = require('./routes/booking');
-// var SearchPropertyRouter = require('./routes/searchProperty');
-// var PostPropertyRouter = require('./routes/postProperty');
+var SearchPropertyRouter = require('./routes/searchProperty');
+var PostPropertyRouter = require('./routes/postProperty');
 // var BookingHistoryRouter = require('./routes/bookingHistory');
 
 // Set up middleware
@@ -58,26 +58,15 @@ require('./auth/passport')(passport);
 App.use("/photos", express.static(__dirname + '/photos'));
 
 App.use("/", LoginRouter);
-App.use("/", authHook, SignupRouter);
+App.use("/", SignupRouter);
 
-// App.use(function (req, res, next) {
-//   let response = {};
-//   if(!req.cookies['HomeawayAuth']){
-//     response['success'] = false ;
-//     response['message'] = 'Unauthorised Access!';
-//     res.status(401).send(response);
-//   }
-//   else{
-//     next();
-//   }
-// });
 
-// App.use("/", LogoutRouter);
+App.use("/", authHook, LogoutRouter);
 App.use("/", authHook, UserProfileRouter);
-// App.use("/", PostPropertyRouter);
-// App.use("/", BookingRouter);
-// App.use("/", SearchPropertyRouter);
-// App.use("/", BookingHistoryRouter);
+App.use("/", authHook, PostPropertyRouter);
+// App.use("/", authHook, BookingRouter);
+App.use("/", authHook, SearchPropertyRouter);
+// App.use("/", authHook, BookingHistoryRouter);
 
 var server = App.listen(8080, function () {
   console.log("Server started on port 8080");

@@ -2,39 +2,28 @@
 import React, {Component} from 'react';
 import './Home.css';
 import {Redirect} from 'react-router';
-import cookie from 'react-cookies';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
+import AppConstants from '../../constant/AppConstants';
+import {inputChange, searchProperty} from '../../actions/actions_search_property';
+import { connect } from "react-redux";
 import Navbar from '../Navbar/Navbar';
 
-class Home extends Component{
 
-    state = {
-        location: null,
-        arrivalDate: null,
-        departureDate:null,
-        guests:null,
-        showError:false,
-        error:null
-    }
+class Home extends Component{
 
     constructor(props){
         super(props);
     }
 
     onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value , showError:false });
+        this.props.inputChange({[event.target.name]: event.target.value});
     }
 
     render(){
-        let redirectVar = null;
-        if(!cookie.load('HomewayAuth')){
-            redirectVar = <Redirect to= "/login"/>
-        }
         return(
             <div class="container root">
                 <div class="home-background">
                     <Navbar></Navbar>
+                    {this.renderError()}
                     <div class="hero-text">
                         <h1 class="headline">Book beach houses, cabins,</h1>
                         <h1 class="headline">candos and more, worldwide</h1>
@@ -58,17 +47,16 @@ class Home extends Component{
                             </div>
                         </form>
                     </div>
-                {this.renderError()}
                 </div>
             </div>
         );
     }
 
     renderError(){
-        if(this.state.showError){
+        if(this.props.showError){
             return(
                 <div class="alert alert-danger" role="alert">
-                    {this.state.error}
+                    {this.props.error}
                 </div>
             );
         }
@@ -77,25 +65,19 @@ class Home extends Component{
 
     searchProperty(event){
         event.preventDefault();
-        const { location, arrivalDate, departureDate, guests } = this.state;
-        axios.post('http://localhost:8080/searchProperty', {location, arrivalDate, departureDate, guests}, {withCredentials: true}).then((response) => {
-            console.log(response);
-            if(response.data.success){
-                this.props.history.push({pathname :'/searchProperty',  state: { properties: response.data.properties, searchData : {location, arrivalDate, departureDate, guests} }});
-            }
-            else{
-                this.setState({showError:true, error:response.data.message})
-            }
-        })
-        .catch((error) =>{
-            console.log(error);
-            if(error.response.status == 401){
-                this.setState({showError:true, error: "Please login to view properties."})
-            }
-            else{
-                this.setState({showError:true, error: error.message});
-            }
-        });
+        if(!localStorage.getItem(AppConstants.AUTH_TOKEN)){
+            this.props.history.push('/login')
+        }
+        else{
+            const { location, arrivalDate, departureDate, guests } = this.props;
+            this.props.searchProperty({ location, arrivalDate, departureDate, guests }, true);
+        }
     }
 }
-export default Home;
+
+function mapStateToProps(reduxState) {
+    const {location, arrivalDate, departureDate, guests} = reduxState.searchProperty;
+    return {location, arrivalDate, departureDate, guests};
+}
+
+export default connect(mapStateToProps, {inputChange, searchProperty})(Home);

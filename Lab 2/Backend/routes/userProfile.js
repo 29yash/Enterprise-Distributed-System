@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-// var getConnectionFromPool = require('../database');
+
 var uploadPhoto = require('./uploadImage');
 var kafka = require('../kafka/client');
 
@@ -20,7 +20,7 @@ router.get("/userProfile/getProfile",function(req,res){
             console.log(result);
             response['success'] = true;
             delete result['user']['user_password'];
-            response['user'] = result;
+            response = { ...response , ...result};
             res.status(200).send(response);
         }
     });
@@ -50,7 +50,7 @@ router.post("/userProfile/editProfile",function(req,res){
             console.log(result);
             response['success'] = true;
             delete result['user']['user_password'];
-            response['user'] = result;
+            response = { ...response , ...result};
             response['message'] = "User Details Updated successfully";
             res.status(200).send(response);
         }
@@ -62,40 +62,24 @@ router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), fu
     let response = {};
     console.log(req.file);
     if(req.file){
-        getConnectionFromPool((err, connection)=>{
-            if(err){
+        let photoUrl = "http://localhost:8080/photos/" + req.file.filename;
+        kafka.make_request('homeaway_edit_user', 'homeaway_edit_user_response' ,{username: req.user.user_email, photoUrl, isPictureUpload:true}, function(error,result){
+            console.log('In homeaway_edit_user');
+            console.log(result);
+            if (error){
+                console.log("Inside Upload User Profile Photo Kafka Response Error", error);
                 response['success'] = false ;
                 response['message'] = 'Internal Server Error';
-                res.status(500).send(response); 
-                throw err; 
+                res.status(500).send(response);
             }
             else{
-                let photoInsertQuery = 'REPLACE INTO user_profile_picture VALUES (?,?)';
-                let photoUrl = "http://localhost:8080/photos/" + req.file.filename;
-                let username = req.cookies['HomeawayAuth']['user_email'];
-                connection.query(photoInsertQuery, [username, photoUrl], function(err, result){
-                    if(err){
-                        response['success'] = false ;
-                        response['message'] = 'Internal Server Error';
-                        res.status(500).send(response); 
-                        console.log(err);
-                    }
-                    else{
-                        if(result.affectedRows > 0){
-                            response['success'] = true;
-                            response['message'] = "Image uploaded successfully";
-                            response['url'] = photoUrl;
-                            res.status(200).send(response);
-                        }
-                        else{
-                            response['success'] = false;
-                            response['message'] = "Unable to update your profile !";
-                            res.status(200).send(response);
-                        }  
-                    }
-                });
+                console.log("Inside Upload User Profile Photo Kafka Response");
+                console.log(result);
+                response['success'] = true;
+                response['user_pic_url'] = photoUrl;
+                response['message'] = "User Profile Photo successfully";
+                res.status(200).send(response);
             }
-            connection.release();
         });
     }
     else{

@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var getConnectionFromPool = require('../database');
+var kafka = require('../kafka/client');
 
 var validateRequest = function (req, res, next) {    
     let isBadRequest = false;
@@ -24,40 +24,22 @@ var validateRequest = function (req, res, next) {
 
 router.post("/searchProperty", validateRequest, function(req,res){
     let response = {};
-    getConnectionFromPool((err, connection)=>{
-        if(err){
+    kafka.make_request('homeaway_search_property', 'homeaway_search_property_response' ,{username: req.user.user_email, ...req.body}, function(error,result){
+        console.log('In homeaway_post_property');
+        console.log(result);
+        if (error){
+            console.log("Inside Search Property Kafka Response Error", error);
             response['success'] = false ;
             response['message'] = 'Internal Server Error';
-            res.status(500).send(response); 
-            throw err; 
+            res.status(500).send(response);
         }
         else{
-            let searchPropertyQuery = "select * from properties WHERE city =? AND guests >= ? AND propertyId NOT IN (select propertyId from propertyblockdates where (CAST(? AS DATE) <= startDate AND startDate <= CAST(? AS DATE)) OR (CAST(? AS DATE) <= endDate AND endDate<= CAST(? AS DATE)) AND propertyId IN (select propertyId from properties where city =? AND guests >= ?))";
-            let searchPropertyValues = [req.body.location, req.body.guests, req.body.arrivalDate, req.body.departureDate, req.body.arrivalDate, req.body.departureDate, req.body.location, req.body.guests];
-            connection.query(searchPropertyQuery, searchPropertyValues,  function(err, rows){
-                console.log('Rows :'+ rows);            
-                if(err){
-                    response['success'] = false ;
-                    response['message'] = 'Internal Server Error';
-                    res.status(500).send(response); 
-                    throw err; 
-                }
-                else {
-                    if(rows.length > 0){
-                        response['success'] = true ;
-                        response['properties'] = rows;
-                        res.status(200).send(response);
-                    }
-                    else {
-                        response['success'] = true ;
-                        response['message'] = 'No Properties Available';
-                        response['properties'] = [];
-                        res.status(200).send(response);
-                    }
-                }
-            });
+            console.log("Inside Search Property Kafka Response");
+            console.log(result);
+            response['success'] = true;
+            response ['properties'] = result;
+            res.status(200).send(response);
         }
-        connection.release();
     });
 });
 

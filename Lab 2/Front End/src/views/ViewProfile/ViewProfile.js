@@ -8,6 +8,7 @@ import Navbar from '../Navbar/Navbar';
 import { connect } from "react-redux";
 import {fetchUserProfile} from '../../actions/actions_user';
 import profile from '../../images/default-profile-pic.png';
+import AppConstants from '../../constant/AppConstants';
 var Loader = require('react-loader');
 
 class ViewProfile extends Component{
@@ -22,7 +23,7 @@ class ViewProfile extends Component{
 
     render(){
         let redirectVar = null;
-        if(!cookie.load('HomeawayAuth')){
+        if(!localStorage.getItem(AppConstants.AUTH_TOKEN)){
             redirectVar = <Redirect to= "/"/>
         }
         if(this.props.userProfile == null){
@@ -40,7 +41,7 @@ class ViewProfile extends Component{
         }
         else{
             console.log(this.props.userProfile);
-            let profilePicture = this.props.userProfile.pic_url ? this.props.userProfile.pic_url : profile;
+            let profilePicture = this.props.userProfile.user_pic_url ? this.props.userProfile.user_pic_url : profile;
             return(
                 <div class="container root">
                     {redirectVar}
