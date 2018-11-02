@@ -9,7 +9,7 @@ var SignupRouter = require('./routes/signup');
 var LoginRouter = require('./routes/login');
 var LogoutRouter = require('./routes/logout');
 var UserProfileRouter = require('./routes/userProfile');
-// var BookingRouter = require('./routes/booking');
+var BookingRouter = require('./routes/booking');
 var SearchPropertyRouter = require('./routes/searchProperty');
 var PostPropertyRouter = require('./routes/postProperty');
 // var BookingHistoryRouter = require('./routes/bookingHistory');
@@ -64,7 +64,7 @@ App.use("/", SignupRouter);
 App.use("/", authHook, LogoutRouter);
 App.use("/", authHook, UserProfileRouter);
 App.use("/", authHook, PostPropertyRouter);
-// App.use("/", authHook, BookingRouter);
+App.use("/", authHook, BookingRouter);
 App.use("/", authHook, SearchPropertyRouter);
 // App.use("/", authHook, BookingHistoryRouter);
 

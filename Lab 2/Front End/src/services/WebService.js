@@ -118,7 +118,7 @@ export default class WebService extends AxiosService{
     * Required params: propertyId, location, arrivalDate, departureDate, guests, amount
     */
     bookProperty(details, success, failure){
-        this.postCall(URI.POST_PROPERTY_PICTURE, details, success, failure, true);
+        this.postCall(URI.BOOK_PROPERTY, details, success, failure, true);
     }  
 
     /**

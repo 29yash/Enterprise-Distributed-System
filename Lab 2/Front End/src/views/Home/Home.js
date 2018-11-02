@@ -34,10 +34,10 @@ class Home extends Component{
                                 <input type="text" name="location" class="form-control" onChange={this.onChange} placeholder="Where do you want to go?" required/>
                             </div>
                             <div class="col-lg-2">
-                                <input type="date" name="arrivalDate" class="form-control" onChange={this.onChange} placeholder="Arrive" required/>
+                                <input type="date" name="arrivalDate" class="form-control" onChange={this.onChange} placeholder="Arrive" max={this.props.departureDate} required/>
                             </div>
                             <div class="col-lg-2">
-                                <input type="date" name="departureDate" class="form-control" onChange={this.onChange} placeholder="Depart" required/>
+                                <input type="date" name="departureDate" class="form-control" onChange={this.onChange} placeholder="Depart" min={this.props.arrivalDate} required/>
                             </div>
                             <div class="col-lg-2">
                                 <input type="number" name="guests" min="1" class="form-control" onChange={this.onChange} placeholder="Guests" required/>

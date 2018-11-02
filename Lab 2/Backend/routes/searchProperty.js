@@ -25,7 +25,7 @@ var validateRequest = function (req, res, next) {
 router.post("/searchProperty", validateRequest, function(req,res){
     let response = {};
     kafka.make_request('homeaway_search_property', 'homeaway_search_property_response' ,{username: req.user.user_email, ...req.body}, function(error,result){
-        console.log('In homeaway_post_property');
+        console.log('In homeaway_search_property');
         console.log(result);
         if (error){
             console.log("Inside Search Property Kafka Response Error", error);

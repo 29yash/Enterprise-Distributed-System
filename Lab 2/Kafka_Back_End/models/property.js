@@ -19,7 +19,14 @@ const PropertySchema = new Schema({
     minStay: {type: Number, required : true }, 
     owner: {type: String, required : true },
     blockDates: [{ startDate: Date, endDate: Date}],
-    propertyPictures: {type: [String], required:true}
+    propertyPictures: {type: [String], required:true},
+    bookings : [{
+        customerName : String, 
+        arrivalDate : Date, 
+        departureDate : Date,
+        noOfGuests: Number,
+        amount: Number
+    }]
 }); 
 var Property = mongoose.model('properties', PropertySchema);
 

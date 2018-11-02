@@ -4,6 +4,7 @@ import SignupReducer from "./reducer_signup";
 import UserProfileReducer from "./reducer_user";
 import PostPropertyReducer from "./reducer_post_property";
 import SearchProperty from "./reducer_search_property";
+import PropertyDetailAndBooking from "./reducer_property_detail_booking";
 import AppActions from "../constant/AppActions";
 
 const appReducer = combineReducers({
@@ -12,7 +13,8 @@ const appReducer = combineReducers({
   signup: SignupReducer,
   userProfile: UserProfileReducer,
   postProperty: PostPropertyReducer,
-  searchProperty: SearchProperty
+  searchProperty: SearchProperty,
+  propertyDetailAndBooking: PropertyDetailAndBooking
 });
 
 

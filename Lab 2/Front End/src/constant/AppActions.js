@@ -20,5 +20,8 @@ const AppActions = {
     SEARCH_PROPERTY_SUCCESS : "search_property_success",
     SEARCH_PROPERTY_FAILURE : "search_property_failure",
     SEARCH_PROPERTY_INPUT_CHANGE : "search_property_input_change",
+    VIEW_PROPERTY_DETAIL:"view_property_detail",
+    BOOK_PROPERTY_SUCCESS:"book_property_success",
+    BOOK_PROPERTY_FAILURE:"book_property_failure"
 }
 export default AppActions;
