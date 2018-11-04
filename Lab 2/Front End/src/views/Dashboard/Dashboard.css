@@ -15,6 +15,8 @@
 .booking-list{
     justify-content: center;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 25px;
 }
 
@@ -76,7 +78,7 @@
 .dashboard-item .rate-footer{
     background-color: #f6f7f8;
     display: flex;
-    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 50px;
 }
@@ -87,10 +89,16 @@
 }
 
 .dashboard-item .rate-footer .avg-night{
-    font-size: 15px;
-    margin-left: -7px;
+    font-size: 16px;
     margin-top: 2px;
-    font-weight: 400
+    font-weight: 400;
+}
+
+.dashboard-item .rate-footer .amount-paid{
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 2px;
+    font-weight: 400;
 }
 
 .dashboard-item .rate-footer .price{
@@ -100,6 +108,19 @@
 
 .dashboard-item .carousel-inner{
     height: 250px;
+}
+
+.search-filter{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 20%;
+    margin-top: 20px;
+    margin-right: 20%;
+}
+
+.search-filter input {
+    margin-right: 20px;
 }
 
 .dashboard-item .carousel{

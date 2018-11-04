@@ -3,33 +3,131 @@ import './Dashboard.css';
 import { Redirect } from 'react-router';
 import Navbar from '../Navbar/Navbar';
 import AppConstants from '../../constant/AppConstants';
-
+import { getBookingHistory } from '../../actions/actions_booking_history';
+import { connect } from "react-redux";
 class Dashboard extends Component {
 
     state = {
         bookings: [],
         properties: [],
-        currentView: 'property'
+        currentView: 'booking',
+        currentPage: 1,
+        propertyPage: 1,
+        bookingPage: 1,
+        currentBookings: [],
+        currentProperties: [],
+        filteredBooking:[],
+        filteredProperty:[],
+        noOfPages: 0
     }
 
     constructor(props) {
         super(props);
     }
 
+    componentWillMount() {
+        this.props.getBookingHistory();
+    }
+
     componentDidMount() {
-        // axios.get('http://localhost:8080/bookingHistory',{withCredentials : true})
-        //     .then((response) => {
-        //         if(response.data.success){
-        //             console.log(response.data.bookings);
-        //             this.setState({bookings: response.data.bookings});
-        //         }
-        //     })
-        //     .catch((error) =>{
-        //         console.log(error);
-        //         if(error.response.status == 401){
-        //             this.props.history.push('/');
-        //         }
-        //     });
+        this.state.currentView == 'properties' ? this.getCurrentPagesProperties(1) : this.getCurrentPagesBooking(1);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.properties !== this.props.properties || nextProps.bookings !== this.props.bookings) {
+            setTimeout(() => {
+                console.log('Next Props ---', this.props.properties);
+                this.setState({filteredBooking : nextProps.bookings, filteredProperty: nextProps.properties});
+                setTimeout(()=>{
+                    this.state.currentView == 'properties' ? this.getCurrentPagesProperties(1) : this.getCurrentPagesBooking(1);
+                },100);
+            }, 100)
+        }
+    }
+
+    renderPagerProperty() {
+        let pages = [];
+        let counter = 1;
+        if (this.state.filteredProperty.length > 5) {
+            this.state.filteredProperty.map((property, index) => {
+                if (index % 5 == 0) {
+                    let number = counter++;
+                    pages.push(<li class="page-item" key={index}><a class="page-link" onClick={() => { this.getCurrentPagesProperties(number) }}>{number}</a></li>);
+                }
+            })
+            return (
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" onClick={() => { this.getCurrentPagesProperties(this.state.propertyPage - 1) }} aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        {pages}
+                        <li class="page-item">
+                            <a class="page-link" onClick={() => { this.getCurrentPagesProperties(this.state.propertyPage + 1) }} aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            )
+        }
+    }
+
+    renderPagerBooking() {
+        let pages = [];
+        let counter = 1;
+        if (this.state.currentBookings.length > 5) {
+            this.state.currentBookings.map((property, index) => {
+                if (index % 5 == 0) {
+                    let number = counter++;
+                    pages.push(<li class="page-item" key={index}><a class="page-link" onClick={() => { this.getCurrentPagesBooking(number) }}>{number}</a></li>);
+                }
+            })
+            return (
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" onClick={() => { this.getCurrentPagesBooking(this.state.bookingPage - 1) }} aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        {pages}
+                        <li class="page-item">
+                            <a class="page-link" onClick={() => { this.getCurrentPagesBooking(this.state.bookingPage + 1) }} aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            )
+        }
+    }
+
+
+    getCurrentPagesProperties(page) {
+        if (page > 0 && page <= Math.ceil(this.state.filteredProperty.length / 5)) {
+            console.log(this.state.filteredProperty);
+            console.log(((page - 1) * 5), (page * 5));
+            let currentProperties = this.state.filteredProperty.slice(((page - 1) * 5), (page * 5));
+            this.setState({ currentProperties, propertyPage: page })
+            console.log(currentProperties);
+        }
+    }
+
+    getCurrentPagesBooking(page) {
+        if (page > 0 && page <= Math.ceil(this.state.filteredBooking.length / 5)) {
+            console.log(this.state.filteredBooking);
+            console.log(((page - 1) * 5), (page * 5));
+            let currentBookings = this.state.filteredBooking.slice(((page - 1) * 5), (page * 5));
+            this.setState({ currentBookings, bookingPage: page })
+            console.log(currentBookings);
+        }
     }
 
     render() {
@@ -42,73 +140,139 @@ class Dashboard extends Component {
                 {redirectVar}
                 <Navbar theme="light"></Navbar>
                 <hr />
-                <div class="row">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a><h4>All Properties</h4></a></li>
-                        <li><a><h4>Customer Bookings</h4></a></li>
-                    </ul>
+                {
+                    JSON.parse(localStorage.getItem(AppConstants.USER_DETAILS)).user_role == AppConstants.USER_ROLE_OWNER ?
+                        <div class="row">
+                            <ul class="nav nav-tabs">
+                                <li className={this.state.currentView == "properties" ? "active" : ""} onClick={this.changeTab.bind(this, 'properties')}><a><h4>All Properties</h4></a></li>
+                                <li className={this.state.currentView == "booking" ? "active" : ""} onClick={this.changeTab.bind(this, 'booking')} ><a><h4>Customer Bookings</h4></a></li>
+                            </ul>
+                        </div>
+                        : null
+                }
+                <div class="search-filter">
+                    <input type="text" class="form-control" name="location" onChange={this.onSearch.bind(this)}  placeholder="Enter Property Headline or City" required />
+                    <button type="submit" class="btn btn-primary btn-lg">Search</button>
                 </div>
                 <div class="row booking-list">
-                    {this.state.currentView == 'property' ? this.renderProperties() : this.renderBookings()}
+                    {this.state.currentView == 'properties' ? this.renderProperties() : this.renderBookings()}
+                    {this.state.currentView == 'properties' ? this.renderPagerProperty() : this.renderPagerBooking()}
                 </div>
             </div>
         )
     }
+    
+    onSearch(event){
+        console.log(event.target.value);
+        if(this.state.currentView == 'properties'){
+            let filtered = this.props.properties.filter((el)=>{
+                return el.headline.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 || el.city.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1;
+            });
+            this.setState({filteredProperty:filtered});
+            setTimeout(()=>{
+                this.getCurrentPagesProperties(1);
+            }, 100);
+        }
+        else{
+            let filtered = this.props.bookings.filter((el)=>{
+                return el.headline.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 || el.city.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1;
+            });
+            this.setState({filteredBooking:filtered});
+            setTimeout(()=>{
+                this.getCurrentPagesBooking(1);
+            }, 100);
+        }
+        
+    }
+
+    changeTab(tab) {
+        if (tab == 'properties') {
+            this.setState({ currentView: 'properties', propertyPage: 1 });
+            setTimeout(() => { this.getCurrentPagesProperties(1) }, 100);
+        }
+        else {
+            this.setState({ currentView: 'booking', bookingPage: 1 });
+        }
+    }
 
     renderBookings() {
-        return (
-            <div></div>
-        );
+        let propertyList = [];
+        console.log(this.state.currentPageProperties);
+
+        if (this.state.currentBookings.length > 0) {
+            this.state.currentBookings.map((booking, index) => {
+                propertyList.push(
+                    <div class="dashboard-item" key={index}>
+                        <div class="pro-photos">
+                            {this.renderPhotoCrousel(booking, index)}
+                        </div>
+                        <div class="pro-details">
+                            <h3>{booking.headline}</h3>
+                            <ul class="list-horizontal">
+                                <li>{booking.type}</li>
+                                <li>{booking.bedrooms + ' BR'}</li>
+                                <li>{booking.bathroom + ' BA'}</li>
+                                <li>{booking.booking.noOfGuests + ' Guests'}</li>
+                            </ul>
+                            <ul class="list-horizontal">
+                                <li>{'From ' + this.parseDate(booking.booking.arrivalDate) + ' to ' + this.parseDate(booking.booking.departureDate)}</li>
+                            </ul>
+                            <span><i class="glyphicon glyphicon-map-marker"></i>{" " + booking.unit + ', ' + booking.street + ', ' + booking.city}</span>
+                            <div class="rate-footer">
+                                <span class="amount-paid">Amount Paid</span>
+                                <span><i class="glyphicon glyphicon-usd"></i></span>
+                                <span class="price">{booking.booking.amount}</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            });
+            return propertyList;
+        }
+        else {
+            return (
+                <h4>No Bookings Made Yet !</h4>
+            );
+        }
     }
 
     renderProperties() {
-        let property = {
-            "propertyPictures": [
-                "http://localhost:8080/photos/40ef0e4f-39fa-451a-b495-a8b8e5f6bb89.jpg",
-                "http://localhost:8080/photos/7a4a40c0-4cc1-4b79-91c2-92a9f485d6c8.jpg",
-                "http://localhost:8080/photos/f626fda2-75ce-4d8b-9531-697366e4c768.jpg"
-            ],
-            "country": "India",
-            "street": "Meera Nagar, Koregaon Park,",
-            "unit": "323",
-            "city": "Pune",
-            "state": "Maharashtra",
-            "zip": "41100",
-            "headline": "Deluxe 2 bedrooms in Koregaon Park",
-            "description": "One of the most of prime area of the city, moreover considered as heart of the city\n\nApartments located in the Lane D, Lane 5, Lane 6 of Koregaon park\n\nVery close from OSHO communication, Hospitals, major restaurant, shopping malls etc\n\nVariety of apartments like standard, deluxe, royal, 1/2/3/4 BHK Apartment are available\n\nFacilities :\n\nAir-conditioned bedrooms with attached bathrooms\n\nSatellite television\n\nWell furnished living &amp; Dining Area\n\nFully equipped kitchen with all required things provided in it\n\nDaily Housekeeping\n\nHigh speed internet access\n\n24 hrs running hot &amp; cold water\n\n24/7 Caretaker's assistance\n\nPower back up\n\n24/7 assistance &amp; security\n\nDay to day maintenance\n\nGas hub with chimney\n\nMicrowave, refrigerator\n\nTea/coffee maker\n\nPots, pans, serving dishes",
-            "type": "Apartment",
-            "bedrooms": 2,
-            "bathroom": 2,
-            "guests": 4,
-            "bookingOption": "instant",
-            "singleNightRate": 456,
-            "minStay": 2,
-        }
-        return (
-            <div class="dashboard-item">
-                <div class="pro-photos">
-                    {this.renderPhotoCrousel(property, 1)}
-                </div>
-                <div class="pro-details">
-                    <h3>{property.headline}</h3>
-                    <ul class="list-horizontal">
-                        <li>{property.type}</li>
-                        <li>{property.bedrooms + ' BR'}</li>
-                        <li>{property.bathroom + ' BA'}</li>
-                        <li>{'Sleeps ' + property.guests}</li>
-                    </ul>
-                    <span><i class="glyphicon glyphicon-map-marker"></i>{property.unit + ', ' + property.street + ', ' + property.city}</span>
-                    <div class="rate-footer">
-                        <span><i class="glyphicon glyphicon-usd"></i></span>
-                        <span class="price">{property.singleNightRate}</span>
-                        <span class="avg-night">avg/night</span>
+        let propertyList = [];
+        if (this.state.currentProperties.length > 0) {
+            this.state.currentProperties.map((property, index) => {
+                propertyList.push(
+                    <div class="dashboard-item">
+                        <div class="pro-photos">
+                            {this.renderPhotoCrousel(property, index)}
+                        </div>
+                        <div class="pro-details">
+                            <h3>{property.headline}</h3>
+                            <ul class="list-horizontal">
+                                <li>{property.type}</li>
+                                <li>{property.bedrooms + ' BR'}</li>
+                                <li>{property.bathroom + ' BA'}</li>
+                                <li>{'Sleeps ' + property.guests}</li>
+                            </ul>
+                            <span><i class="glyphicon glyphicon-map-marker"></i>{" " + property.unit + ', ' + property.street + ', ' + property.city}</span>
+                            <div class="rate-footer">
+                                <span><i class="glyphicon glyphicon-usd"></i></span>
+                                <span class="price">{property.singleNightRate}</span>
+                                <span class="avg-night">avg/night</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        );
+                );
+            });
+            return propertyList;
+        }
+        else {
+            return (
+                <h4>No Properties Posted Yet !</h4>
+            );
+        }
     }
 
-    renderPhotoCrousel(property, index) {     
+    renderPhotoCrousel(property, index) {
         return (
             <div id={index + '-crousel'} class="carousel slide" data-ride="carousel" onClick={(event) => { event.stopPropagation(); }}>
                 <div class="carousel-inner">
@@ -136,36 +300,16 @@ class Dashboard extends Component {
         });
         return slides;
     }
+
+    parseDate(dateString) {
+        let date = new Date(dateString);
+        return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + (date.getDate() + 1);
+    }
 }
-export default Dashboard;
-        // <table>
-        //     <tr>
-        //         <th>Booking ID</th>
-        //         <th>Property ID</th> 
-        //         <th>Arrival</th>
-        //         <th>Departure</th>
-        //         <th>No. Of Guests</th>
-        //         <th>Amount Paid</th>
-        //     </tr>
-        //     {
-        //         this.state.bookings.length > 0 ?
-        //             this.state.bookings.map((booking, index)=>{
-        //                 let rows = [];
-        //                 let arrival = new Date(booking.startDate);
-        //                 let depart = new Date(booking.endDate)
-        //                 rows.push(
-        //                     <tr id={index}>
-        //                         <td>{booking.bookingId}</td>
-        //                         <td>{booking.propertyId}</td> 
-        //                         <td>{arrival.getFullYear() + '-'+eval(arrival.getMonth()+1)+ '-' +arrival.getDate()}</td>
-        //                         <td>{depart.getFullYear() + '-'+eval(depart.getMonth()+1)+ '-' +depart.getDate()}</td>
-        //                         <td>{booking.guests}</td>
-        //                         <td>{booking.amount}</td>
-        //                 </tr>
-        //                 );
-        //                 return rows;
-        //             })
-        //         :
-        //         <h3>There are no bookings made yet</h3>
-        //     }
-        // </table>
+
+function mapStateToProps(reduxState) {
+    const { bookings, properties, errorMessage } = reduxState.bookingHistory;
+    return { bookings, properties, errorMessage };
+}
+
+export default connect(mapStateToProps, { getBookingHistory })(Dashboard);

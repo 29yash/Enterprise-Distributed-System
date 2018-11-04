@@ -22,6 +22,8 @@ const AppActions = {
     SEARCH_PROPERTY_INPUT_CHANGE : "search_property_input_change",
     VIEW_PROPERTY_DETAIL:"view_property_detail",
     BOOK_PROPERTY_SUCCESS:"book_property_success",
-    BOOK_PROPERTY_FAILURE:"book_property_failure"
+    BOOK_PROPERTY_FAILURE:"book_property_failure",
+    BOOKING_HISTORY_SUCCESS:"booking_history_success",
+    BOOKING_HISTORY_FAILURE:"booking_history_failure"
 }
 export default AppActions;

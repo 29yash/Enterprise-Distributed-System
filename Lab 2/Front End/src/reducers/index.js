@@ -5,6 +5,7 @@ import UserProfileReducer from "./reducer_user";
 import PostPropertyReducer from "./reducer_post_property";
 import SearchProperty from "./reducer_search_property";
 import PropertyDetailAndBooking from "./reducer_property_detail_booking";
+import BookingHistory from "./reducer_booking_history";
 import AppActions from "../constant/AppActions";
 
 const appReducer = combineReducers({
@@ -14,7 +15,8 @@ const appReducer = combineReducers({
   userProfile: UserProfileReducer,
   postProperty: PostPropertyReducer,
   searchProperty: SearchProperty,
-  propertyDetailAndBooking: PropertyDetailAndBooking
+  propertyDetailAndBooking: PropertyDetailAndBooking,
+  bookingHistory:BookingHistory
 });
 
 

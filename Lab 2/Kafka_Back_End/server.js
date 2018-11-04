@@ -7,6 +7,7 @@ var GetUserProfile = require('./services/getUserProfile');
 var PostProperty = require('./services/postProperty');
 var SearchProperty = require('./services/searchProperty');
 var BookProperty = require('./services/booking');
+var BookingHistory = require('./services/bookingHistory');
 
 function handleTopicRequest(topic_name,fname){
     var consumer = connection.getConsumer(topic_name);
@@ -48,3 +49,4 @@ handleTopicRequest("homeaway_get_user_profile",GetUserProfile);
 handleTopicRequest("homeaway_post_property",PostProperty);
 handleTopicRequest("homeaway_search_property",SearchProperty);
 handleTopicRequest("homeaway_book_property",BookProperty);
+handleTopicRequest("homeaway_booking_history",BookingHistory);
