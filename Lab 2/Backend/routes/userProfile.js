@@ -62,7 +62,7 @@ router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), fu
     let response = {};
     console.log(req.file);
     if(req.file){
-        let photoUrl = "http://localhost:8080/photos/" + req.file.filename;
+        let photoUrl = "http://ec2-18-224-215-141.us-east-2.compute.amazonaws.com:8080/photos/" + req.file.filename;
         kafka.make_request('homeaway_edit_user', 'homeaway_edit_user_response' ,{username: req.user.user_email, photoUrl, isPictureUpload:true}, function(error,result){
             console.log('In homeaway_edit_user');
             console.log(result);

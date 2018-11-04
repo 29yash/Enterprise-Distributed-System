@@ -13,6 +13,7 @@ var BookingRouter = require('./routes/booking');
 var SearchPropertyRouter = require('./routes/searchProperty');
 var PostPropertyRouter = require('./routes/postProperty');
 var BookingHistoryRouter = require('./routes/bookingHistory');
+var ConversationRouter = require('./routes/conversations');
 
 // Set up middleware
 var authHook = passport.authenticate('jwt', {session: true});
@@ -67,6 +68,7 @@ App.use("/", authHook, PostPropertyRouter);
 App.use("/", authHook, BookingRouter);
 App.use("/", authHook, SearchPropertyRouter);
 App.use("/", authHook, BookingHistoryRouter);
+App.use("/", authHook, ConversationRouter);
 
 var server = App.listen(8080, function () {
   console.log("Server started on port 8080");

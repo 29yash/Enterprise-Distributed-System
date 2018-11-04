@@ -24,6 +24,14 @@ const AppActions = {
     BOOK_PROPERTY_SUCCESS:"book_property_success",
     BOOK_PROPERTY_FAILURE:"book_property_failure",
     BOOKING_HISTORY_SUCCESS:"booking_history_success",
-    BOOKING_HISTORY_FAILURE:"booking_history_failure"
+    BOOKING_HISTORY_FAILURE:"booking_history_failure",
+    ASK_QUESTION_SUCCESS:"ask_question_success",
+    ASK_QUESTION_FAILURE:"ask_question_failure",
+    VIEW_CONVERSATION:"view_conversation",
+    SEND_MESSAGE:"send_message",
+    FETCH_CONVERSATIONS_SUCCESS:"fetch_conversations_success",
+    FETCH_CONVERSATIONS_FAILURE:"fetch_conversations_failure",
+    POST_MESSAGE_SUCCESS:"post_message_success",
+    POST_MESSAGE_FAILURE:"post_message_failure"
 }
 export default AppActions;

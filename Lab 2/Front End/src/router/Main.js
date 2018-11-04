@@ -11,6 +11,8 @@ import Dashboard from '../views/Dashboard/Dashboard';
 import PostProperty from '../views/PostProperty/PostProperty';
 import PropertyListing from '../views/PropertyListing/PropertyListing';
 import ViewProperty from '../views/ViewProperty/ViewProperty';
+import Inbox from '../views/Inbox/Inbox';
+import Conversation from '../views/Conversation/Conversation';
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -28,6 +30,8 @@ class Main extends Component {
                 <Route path="/postProperty" component={PostProperty}/>
                 <Route path="/searchProperty" component={PropertyListing}/>
                 <Route path="/viewProperty" component={ViewProperty}/>
+                <Route path="/inbox" component={Inbox}/>
+                <Route path="/conversation" component={Conversation}/>
             </div>
         )
     }

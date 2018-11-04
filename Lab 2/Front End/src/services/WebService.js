@@ -1,8 +1,8 @@
 import AxiosService from "./AxiosService";
 import URI from "../constant/uri"
 
-export default class WebService extends AxiosService{
-    
+export default class WebService extends AxiosService {
+
     static instance = null;
 
     constructor() {
@@ -18,14 +18,14 @@ export default class WebService extends AxiosService{
         }
         return this.instance;
     }
-    
+
     /**
     * Login Call - User login api call
     * Takes success and failure operations
     *
     * Required params: username, password and role in detail object.
     */
-    login(credentials, success, failure){
+    login(credentials, success, failure) {
         this.postCall(URI.LOGIN, credentials, success, failure);
     }
 
@@ -35,7 +35,7 @@ export default class WebService extends AxiosService{
     *
     * Required params: firstName, lastName, email, password, role in detail object.
     */
-    signUp(details, success, failure){
+    signUp(details, success, failure) {
         this.postCall(URI.SIGNUP, details, success, failure);
     }
 
@@ -48,7 +48,7 @@ export default class WebService extends AxiosService{
     * Optional Params: user_aboutme, user_city, user_company, user_hometown, 
             user_languages, user_school, user_gender, user_phone_number in detail object.
     */
-    editUserProfile(details, success, failure){
+    editUserProfile(details, success, failure) {
         this.postCall(URI.EDIT_USER_PROFILE, details, success, failure, true);
     }
 
@@ -58,17 +58,17 @@ export default class WebService extends AxiosService{
     *
     * Required params: profilePicture in Form Data.
     */
-    uploadUserProfilePhoto(details, success, failure){
+    uploadUserProfilePhoto(details, success, failure) {
         this.postCall(URI.USER_PROFILE_PICTURE, details, success, failure, true);
     }
-    
+
     /**
     * Get User Profile - Api call
     * Takes success and failure operations
     *
     * Required params:.
     */
-    getUserProfile(success, failure){
+    getUserProfile(success, failure) {
         this.getCall(URI.GET_USER_PROFILE, success, failure, true);
     }
 
@@ -87,7 +87,7 @@ export default class WebService extends AxiosService{
     *
     * Required params:
     */
-    searchProperty(details, success, failure){
+    searchProperty(details, success, failure) {
         this.postCall(URI.SEARCH_PROPERTY, details, success, failure, true);
     }
 
@@ -97,7 +97,7 @@ export default class WebService extends AxiosService{
     *
     * Required params:
     */
-    postProperty(details, success, failure){
+    postProperty(details, success, failure) {
         this.postCall(URI.POST_PROPERTY, details, success, failure, true);
     }
 
@@ -107,9 +107,9 @@ export default class WebService extends AxiosService{
     *
     * Required params:
     */
-    postPropertyPicture(details, success, failure){
+    postPropertyPicture(details, success, failure) {
         this.postCall(URI.POST_PROPERTY_PICTURE, details, success, failure, true);
-    }   
+    }
 
     /**
     * Book Property - Api call
@@ -117,9 +117,9 @@ export default class WebService extends AxiosService{
     *
     * Required params: propertyId, location, arrivalDate, departureDate, guests, amount
     */
-    bookProperty(details, success, failure){
+    bookProperty(details, success, failure) {
         this.postCall(URI.BOOK_PROPERTY, details, success, failure, true);
-    }  
+    }
 
     /**
     * Booking History - Api call
@@ -127,7 +127,27 @@ export default class WebService extends AxiosService{
     *
     * Required params: 
     */
-    bookingHistory(success, failure){
+    bookingHistory(success, failure) {
         this.getCall(URI.BOOKING_HISTORY, success, failure, true);
-    }  
+    }
+
+    /**
+    * Get Conversations - Api call
+    * Takes success and failure operations
+    *
+    * Required params: 
+    */
+    getConversations(success, failure) {
+        this.getCall(URI.GET_CONVERSATIONS, success, failure, true);
+    }
+
+    /**
+        * Post Message - Api call
+        * Takes success and failure operations
+        *
+        * Required params: 
+        */
+    postQuestion(details, success, failure) {
+        this.postCall(URI.POST_MESSAGE, details, success, failure, true);
+    }
 }

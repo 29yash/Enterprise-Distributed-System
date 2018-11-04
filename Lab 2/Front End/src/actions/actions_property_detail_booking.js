@@ -30,6 +30,23 @@ export function bookProperty(bookingDetails){
     }
 }
 
+export function askQuestion(questionDetails){
+    return(dispatch) => {
+        WebService.getInstance().postQuestion(questionDetails, (response)=>{
+            console.log(response);
+            if (response.success) {
+                dispatch(askQuestionSuccess(response));
+            }
+            else{
+                dispatch(askQuestionFailure(response.message));
+            }
+        },(error)=>{
+            console.log(error);
+            dispatch(askQuestionFailure(error));
+        })
+    }
+}
+
 const bookPropertySuccess = (bookingResponse) => ({
     type: AppActions.BOOK_PROPERTY_SUCCESS,
     payload:bookingResponse.message
@@ -37,6 +54,16 @@ const bookPropertySuccess = (bookingResponse) => ({
 
 const bookPropertyFailure = (error) => ({
     type: AppActions.BOOK_PROPERTY_FAILURE,
+    payload:error
+});
+
+const askQuestionSuccess = (response) => ({
+    type: AppActions.ASK_QUESTION_SUCCESS,
+    payload: response.message
+});
+
+const askQuestionFailure = (error) => ({
+    type: AppActions.ASK_QUESTION_FAILURE,
     payload:error
 });
 
