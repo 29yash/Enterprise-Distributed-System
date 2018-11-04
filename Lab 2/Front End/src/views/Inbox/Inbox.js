@@ -39,15 +39,22 @@ class Inbox extends Component {
         let conversations = [];
         let user = JSON.parse(localStorage.getItem(AppConstants.USER_DETAILS));
         let messageString = user.user_role == AppConstants.USER_ROLE_TRAVELLER  ? 'Message From Owner Of ' : 'Message From Traveller For '
-        this.props.conversations.map((conversation, index)=>{
-            conversations.push(
-                <div class="message" key={index} onClick={this.viewConversation.bind(this, conversation)}>
-                    <h4>{ messageString + conversation.propertyHeadline.substr(0, 40) + "\u2026"}</h4>
-                    <h5>{user.user_role == AppConstants.USER_ROLE_TRAVELLER ? conversation.owner : conversation.traveller}</h5>
-                </div>
+        if(this.props.conversations && this.props.conversations.length > 0){
+            this.props.conversations.map((conversation, index)=>{
+                conversations.push(
+                    <div class="message" key={index} onClick={this.viewConversation.bind(this, conversation)}>
+                        <h4>{ messageString + conversation.propertyHeadline.substr(0, 40) + "\u2026"}</h4>
+                        <h5>{user.user_role == AppConstants.USER_ROLE_TRAVELLER ? conversation.owner : conversation.traveller}</h5>
+                    </div>
+                );
+            });
+            return conversations;
+        }
+        else{
+            return (
+                <h4>No Messages Yet !</h4>
             );
-        });
-        return conversations;
+        }
     }
 
     viewConversation(conversation){

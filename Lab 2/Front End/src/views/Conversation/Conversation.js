@@ -84,6 +84,11 @@ class Conversation extends Component {
             });
             return conversations;
         }
+        else{
+            return (
+                <h4>No Messages Yet !</h4>
+            );
+        }
     }
 
     sendMessage(){
