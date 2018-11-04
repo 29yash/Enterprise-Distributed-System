@@ -20,6 +20,10 @@ export default function(state = initialState, action) {
             return {...state, isAckPositive: true, bookConfirmation:action.payload}
         case AppActions.BOOK_PROPERTY_FAILURE:
             return {...state, isAckPositive: false, bookConfirmation:action.payload}
+        case AppActions.ASK_QUESTION_SUCCESS:
+            return {...state, isAckPositive: true, bookConfirmation:action.payload}
+        case AppActions.ASK_QUESTION_FAILURE:
+            return {...state, isAckPositive: false, bookConfirmation:action.payload}
         default:
         return state;
     }

@@ -5,6 +5,11 @@
     padding-right: 0px;
     width: 100%
 }
+.modal{ display:block; }
+
+textarea{
+    resize: none;
+}
 
 .view-property .row{
     display: flex;

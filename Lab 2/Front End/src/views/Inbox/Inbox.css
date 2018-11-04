@@ -1,0 +1,31 @@
+.inbox{
+    width: inherit;
+    margin-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;    
+}
+
+.inbox .message-list{
+    margin-left: 20%;
+    margin-right: 20%
+}
+
+.inbox .message {
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 20px;
+    background-color: #f6f7f8;
+    width: inherit;
+    border: 1px solid #d3d8de;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.message h5{
+    padding-top: 2px;
+    padding-right: 10px;
+    color: dodgerblue
+}

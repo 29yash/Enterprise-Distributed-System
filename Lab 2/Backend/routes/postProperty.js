@@ -10,7 +10,7 @@ router.post("/postProperty/uploadPhoto", uploadPhoto.any(), function(req,res){
     if(req.files.length > 0){
         console.log(req.files);
         req.files.map((file)=>{
-            photoURLS.push("http://localhost:8080/photos/" + file.filename);
+            photoURLS.push("http://ec2-18-224-215-141.us-east-2.compute.amazonaws.com:8080/photos/" + file.filename);
         });
         response['success'] = true;
         response['message'] = "Image uploaded successfully";

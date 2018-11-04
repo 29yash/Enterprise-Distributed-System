@@ -45,7 +45,8 @@ class Navbar extends Component{
                                     {this.userData.user_role === 'Owner' ?  'Dashboard' : 'My Trips'}
                                 </span>
                             </Link>
-                        <br/><br/><Link to="/viewProfile"><span class="dropdown-item">My Profile</span></Link><br/><br/>
+                        <br/><br/><Link to="/viewProfile"><span class="dropdown-item">My Profile</span></Link><br/>
+                        <br/><Link to="/inbox"><span class="dropdown-item">Inbox</span></Link><br/><br/>
                         <span class="dropdown-item" onClick={this.logout.bind(this)}>Logout</span>
                     </div>
                 </div>
