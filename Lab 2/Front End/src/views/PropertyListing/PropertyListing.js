@@ -104,9 +104,9 @@ class PropertyListing extends Component {
     renderPager() {
         let pages = [];
         let counter = 1;
-        if(this.props.properties.length > 5){
+        if(this.props.properties.length > 10){
             this.props.properties.map((property, index)=>{
-                if(index%5 == 0){
+                if(index%10 == 0){
                     let number = counter++;
                     pages.push(<li class="page-item" key={index}><a class="page-link" onClick={()=>{this.getCurrentPagesProperties(number)}}>{number}</a></li>);
                 }
@@ -134,10 +134,10 @@ class PropertyListing extends Component {
     }
 
     getCurrentPagesProperties(page){
-        if(page > 0 && page <= Math.ceil(this.props.properties.length/5)){
+        if(page > 0 && page <= Math.ceil(this.props.properties.length/10)){
             console.log(this.props.properties);
-            console.log(((page-1)*5),(page*5));
-            let currentPageProperties = this.props.properties.slice(((page-1)*5), (page*5));
+            console.log(((page-1)*10),(page*10));
+            let currentPageProperties = this.props.properties.slice(((page-1)*10), (page*10));
             this.setState({currentPageProperties, currentPage:page})
             console.log(currentPageProperties);
         }

@@ -9,7 +9,7 @@ export function userSignup(values){
         console.log(response);
         if(response.success){
             dispatch(signupSuccess(response));
-            dispatch(userLogin({username: values.email, password:values.password}));
+            dispatch(userLogin({username: values.email, password:values.password, role:values.role}));
         }
         else{
             dispatch(signupFailure(response.message));
