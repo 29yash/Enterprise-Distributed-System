@@ -1,0 +1,128 @@
+.owner-dashboard{
+    width: inherit;
+    margin-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;
+}
+
+.owner-dashboard .row{
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.booking-list{
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.owner-dashboard .row .nav {
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-item .pro-details{
+    flex: 5;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.dashboard-item .pro-details h3{
+    padding-left: 10px;
+}
+
+.dashboard-item .pro-details span{
+    font-size: 18px;
+    color: #7a838c;   
+    padding-left: 10px;
+}
+
+.dashboard-item{
+    display: flex;
+    border-radius: 6px;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,.1);
+    margin-bottom: 20px;
+    height: 250px;
+    width: 60%;
+}
+
+.dashboard-item h3{
+    margin-top: 0px;
+}
+
+.dashboard-item .list-horizontal{
+    padding-left: 10px;
+}
+
+.dashboard-item .list-horizontal li {
+    display:inline-block;
+    font-size: 18px;
+    color: #7a838c;
+}
+.dashboard-item .list-horizontal li:before {
+	content: '\00a0\2022\00a0\00a0';
+	color:#999;
+	color:rgba(0,0,0,0.5);
+	font-size:17px;
+}
+.dashboard-item .list-horizontal li:first-child:before {
+	content: '';
+}
+
+.dashboard-item .rate-footer{
+    background-color: #f6f7f8;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+}
+
+.dashboard-item .rate-footer span{
+    color: #7a838c;
+    font-weight: bold
+}
+
+.dashboard-item .rate-footer .avg-night{
+    font-size: 16px;
+    margin-top: 2px;
+    font-weight: 400;
+}
+
+.dashboard-item .rate-footer .amount-paid{
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 2px;
+    font-weight: 400;
+}
+
+.dashboard-item .rate-footer .price{
+    font-size: 24px;
+    margin-left: -10px;
+}
+
+.dashboard-item .carousel-inner{
+    height: 250px;
+}
+
+.search-filter{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 20%;
+    margin-top: 20px;
+    margin-right: 20%;
+}
+
+.search-filter input {
+    margin-right: 20px;
+}
+
+.dashboard-item .carousel{
+    /* width: 360px; */
+}

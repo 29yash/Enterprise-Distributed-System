@@ -1,0 +1,52 @@
+.navbar-fixed-right{
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: row
+}
+
+.nav-item{
+    padding: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    cursor: pointer
+}
+
+.white-link-text, .white-link-text:hover, .white-link-text:focus{
+    color: #fff
+}
+
+.blue-link-text {
+    color: #337ab7
+}
+
+.dropdown-menu{
+    text-align: center;
+    padding: 15px;
+}
+
+.dropdown-menu span {
+    color: #337ab7;
+    padding-top: 30px;
+    text-decoration: none;
+}
+
+.bird-house{
+    margin-left: 15px;
+}
+
+.list-your-property{
+    background-color: #fff;
+    padding: 15px;
+    padding-left: 30px;
+    margin-left: 5px;
+    padding-right: 30px;
+    border-radius: 25px;
+    border: 1px solid #cccccc;
+}

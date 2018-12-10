@@ -1,0 +1,70 @@
+.conversation{
+    width: inherit;
+    margin-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    padding-right: 0px;    
+}
+
+.conversation .conversation-list{
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top:25px
+}
+
+.conversation .title{
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conversation .input-message{
+    margin-left: 20%;
+    margin-right: 20%
+}
+
+.input-message p{
+    font-size: 15px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #5e6d77
+}
+
+.input-message textarea{
+    resize: none;
+    padding: 20px;
+}
+
+.input-message button{
+    margin-top: 10px;
+    position: absolute;
+    right: 20%;
+}
+
+.conversation .message{
+    width: inherit;
+    border: 1px solid #d3d8de;
+    border-radius: 5px;
+    padding: 30px;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.message .message-title{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #d3d8de;
+}
+
+.message .message-body{
+    padding-left: 20px;
+}
+
+.conversation .alert-success, .conversation .alert-danger {
+    text-align: center;
+    padding: 20px;
+    margin-left: 30%;
+    margin-right: 30%;
+}
