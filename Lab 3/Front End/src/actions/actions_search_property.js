@@ -1,4 +1,4 @@
-import WebService from "../services/WebService";
+import GraphQLService from "../services/GraphQLService";
 import AppConstants from "../constant/AppConstants";
 import AppActions from "../constant/AppActions";
 import { history } from "../router/history";
@@ -12,7 +12,7 @@ export function inputChange(inputValues){
 
 export function searchProperty(searchParams, isFromHome = false){
     return(dispatch)=>{
-        WebService.getInstance().searchProperty(searchParams, (response)=>{
+        GraphQLService.getInstance().searchProperty(searchParams, (response)=>{
             if (response.success) {
                 console.log(response);
                 dispatch(searchPropertySuccess(response.properties));

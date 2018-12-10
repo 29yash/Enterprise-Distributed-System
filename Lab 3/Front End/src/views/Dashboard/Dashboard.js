@@ -204,24 +204,24 @@ class Dashboard extends Component {
                 propertyList.push(
                     <div class="dashboard-item" key={index}>
                         <div class="pro-photos">
-                            {this.renderPhotoCrousel(booking, index)}
+                            {this.renderPhotoCrousel(booking.property, index)}
                         </div>
                         <div class="pro-details">
-                            <h3>{booking.headline}</h3>
+                            <h3>{booking.property.headline}</h3>
                             <ul class="list-horizontal">
-                                <li>{booking.type}</li>
-                                <li>{booking.bedrooms + ' BR'}</li>
-                                <li>{booking.bathroom + ' BA'}</li>
-                                <li>{booking.booking.noOfGuests + ' Guests'}</li>
+                                <li>{booking.property.type}</li>
+                                <li>{booking.property.bedrooms + ' BR'}</li>
+                                <li>{booking.property.bathroom + ' BA'}</li>
+                                <li>{booking.noOfGuests + ' Guests'}</li>
                             </ul>
                             <ul class="list-horizontal">
-                                <li>{'From ' + this.parseDate(booking.booking.arrivalDate) + ' to ' + this.parseDate(booking.booking.departureDate)}</li>
+                                <li>{'From ' + this.parseDate(booking.arrivalDate) + ' to ' + this.parseDate(booking.departureDate)}</li>
                             </ul>
-                            <span><i class="glyphicon glyphicon-map-marker"></i>{" " + booking.unit + ', ' + booking.street + ', ' + booking.city}</span>
+                            <span><i class="glyphicon glyphicon-map-marker"></i>{" " + booking.property.unit + ', ' + booking.property.street + ', ' + booking.property.city}</span>
                             <div class="rate-footer">
                                 <span class="amount-paid">Amount Paid</span>
                                 <span><i class="glyphicon glyphicon-usd"></i></span>
-                                <span class="price">{booking.booking.amount}</span>
+                                <span class="price">{booking.amount}</span>
                             </div>
                         </div>
                     </div>

@@ -1,61 +1,57 @@
 var express = require("express");
 var router = express.Router();
-
 var uploadPhoto = require('./uploadImage');
 var kafka = require('../kafka/client');
 
-router.get("/userProfile/getProfile",function(req,res){
+async function getUserProfile(req){
     let response = {};
-    kafka.make_request('homeaway_get_user_profile', 'homeaway_get_user_profile_response', {username: req.user.user_email}, function(error,result){
+    return await kafka.make_request('homeaway_get_user_profile', 'homeaway_get_user_profile_response', {username: req.user.user_email}, function(error,result){
         console.log('In homeaway_get_user_profile');
         console.log(result);
         if (error){
             console.log("Inside Get User Kafka Response Error", error);
             response['success'] = false ;
             response['message'] = 'Internal Server Error';
-            res.status(500).send(response);
+            return response;
         }
         else{
             console.log("Inside Get User Kafka Response");
             console.log(result);
             response['success'] = true;
             delete result['user']['user_password'];
-            response = { ...response , ...result};
-            res.status(200).send(response);
+            response = { ...response , ...result['user']};
+            return response;
         }
     });
-});
+};
 
 
-router.post("/userProfile/editProfile",function(req,res){
+async function editUserProfile(req, username){
     let response = {};
-    console.log(req.body);
-    
-    if(!(req.body.user_first_name.trim().length > 0 && req.body.user_last_name.trim().length > 0)){
+    console.log(req);
+    if(!(req.user_first_name.trim().length > 0 && req.user_last_name.trim().length > 0)){
         response['success'] = false ;
         response['message'] = "First and Last Name are Mandatory";
-        res.status(400).send(response);
+        return response;
     }
-    kafka.make_request('homeaway_edit_user', 'homeaway_edit_user_response' ,{username: req.user.user_email, body: req.body}, function(error,result){
+    return await kafka.make_request('homeaway_edit_user', 'homeaway_edit_user_response' ,{username, body: req}, function(error,result){
         console.log('In homeaway_edit_user');
         console.log(result);
         if (error){
             console.log("Inside Edit User Kafka Response Error", error);
             response['success'] = false ;
             response['message'] = 'Internal Server Error';
-            res.status(500).send(response);
+            return response;
         }
         else{
             console.log("Inside Edit User Kafka Response");
             console.log(result);
             response['success'] = true;
-            delete result['user']['user_password'];
-            response = { ...response , ...result};
             response['message'] = "User Details Updated successfully";
-            res.status(200).send(response);
+            return response;
         }
     });
-});
+};
 
 
 router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), function(req,res){
@@ -88,4 +84,4 @@ router.post("/userProfile/uploadPhoto", uploadPhoto.single('profilePicture'), fu
         res.status(200).send(response);
     }
 });
-module.exports = router;
+module.exports = {getUserProfile, editUserProfile};

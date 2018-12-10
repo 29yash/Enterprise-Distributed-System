@@ -6,6 +6,7 @@ var expressSession = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var passport = require('passport');
+const jwtDecode = require('jwt-decode');
 var schema = require('./schema/schema');
 // var SignupRouter = require('./routes/signup');
 // var LoginRouter = require('./routes/login');
@@ -53,14 +54,30 @@ App.use(function(req, res, next) {
   next();
 });
 
-App.use(passport.initialize());
+// App.use(passport.initialize());
 
 // Bring in defined Passport Strategy
 // require('./auth/passport')(passport);
 
+App.use("/", (req, res, next) =>{
+  if(req.headers.authorization){
+    try {
+      const jwtDecoded = jwtDecode(req.headers.authorization.substring(4, req.headers.authorization.length));
+      req.user = jwtDecoded;
+    } catch (error) {
+      req.user = null
+      // res.status(401).send({message: "Invalid Token"});
+    }
+  }
+  next();
+});
+
 
 App.use('/graphql', graphqlHTTP((request) => ({
   schema,
+  context: {
+    user : request.user
+  },
   graphiql: true
 })));
 

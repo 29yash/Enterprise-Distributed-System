@@ -1,4 +1,4 @@
-import WebService from "../services/WebService";
+import GraphQLService from "../services/GraphQLService";
 import { history } from "../router/history";
 import AppConstants from "../constant/AppConstants";
 import AppActions from "../constant/AppActions";
@@ -6,7 +6,7 @@ import AppActions from "../constant/AppActions";
 export function fetchUserProfile(values){   
     return (dispatch) => {
         dispatch(fetchUserProfileloading());    
-        WebService.getInstance().getUserProfile((response)=>{
+        GraphQLService.getInstance().getUserProfile((response)=>{
             if (response.success) {
                 console.log(response);
                 dispatch(fetchUserProfileSuccess(response));
@@ -24,7 +24,7 @@ export function fetchUserProfile(values){
 export function updateUserProfile(profile){
     return(dispatch) => {
         dispatch(updateUserProfileloading());
-        WebService.getInstance().editUserProfile(profile, (response)=>{
+        GraphQLService.getInstance().editUserProfile(profile, (response)=>{
             if (response.success) {
                 console.log(response);
                 dispatch(updateUserProfileSuccess(profile, response.message));
@@ -41,7 +41,7 @@ export function updateUserProfile(profile){
 
 export function uploadUserProfilePicture(profilePicture){
     return(dispatch) => {
-        WebService.getInstance().uploadUserProfilePhoto(profilePicture, (response)=>{
+        GraphQLService.getInstance().uploadUserProfilePhoto(profilePicture, (response)=>{
             if (response.success) {
                 console.log(response);
                 dispatch(uploadUserProfilePictureSuccess(response.user_pic_url));

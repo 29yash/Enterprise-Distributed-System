@@ -1,4 +1,5 @@
 import WebService from "../services/WebService";
+import GraphQLService from "../services/GraphQLService";
 import AppConstants from "../constant/AppConstants";
 import AppActions from "../constant/AppActions";
 import { history } from "../router/history";
@@ -15,7 +16,7 @@ export function viewProperty(propertyAndBookingDetails){
 
 export function bookProperty(bookingDetails){
     return(dispatch) => {
-        WebService.getInstance().bookProperty(bookingDetails, (response)=>{
+        GraphQLService.getInstance().bookProperty(bookingDetails, (response)=>{
             if (response.success) {
                 console.log(response);
                 dispatch(bookPropertySuccess(response));

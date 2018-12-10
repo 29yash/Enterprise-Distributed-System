@@ -1,4 +1,4 @@
-import WebService from "../services/WebService";
+import GraphQLService from "../services/GraphQLService";
 import AppConstants from "../constant/AppConstants";
 import AppActions from "../constant/AppActions";
 import { history } from "../router/history";
@@ -6,7 +6,7 @@ import { history } from "../router/history";
 
 export function getBookingHistory(){
     return(dispatch)=>{
-        WebService.getInstance().bookingHistory((response)=>{
+        GraphQLService.getInstance().bookingHistory((response)=>{
             if (response.success) {
                 console.log(response);
                 dispatch(bookingHistorySuccess(response));

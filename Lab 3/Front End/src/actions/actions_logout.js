@@ -4,12 +4,12 @@ import AppConstants from "../constant/AppConstants";
 import AppActions from "../constant/AppActions";
 
 export function userLogout(){
-    WebService.getInstance().logout((response)=>{
+    // WebService.getInstance().logout((response)=>{
         logoutReset();
-    },(error)=>{
-        console.log(error);
-        logoutReset();
-    });
+    // },(error)=>{
+    //     console.log(error);
+    //     logoutReset();
+    // });
 }
 
 export function logoutReset(){  
