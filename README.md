@@ -1,4 +1,4 @@
-# CMPE273-44
+# CMPE273-44 (Enterprise Distributed System)
 
 ## Pre-Requisite
  ReactJS, MySQL and NodeJS and VS Code
